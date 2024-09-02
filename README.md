@@ -1,6 +1,11 @@
-# 🎮 Fit Launcher
+# 🎮 Fit Launcher Beta Version
+
+
 
 Fit Launcher is a 🚀 **blazingly fast** 🚀 game launcher designed specifically for cracked games from FitGirl Repack. Built with Rust, Tauri, and SolidJS, this launcher delivers top-notch performance and a sleek, modern design. 
+
+# Beta
+- This version is designed to be a beta version and is highly unstable, please refrain from using it on a daily basis. If you find any issues please contacts us on Discord or create an Issue or a PR.
 
 ## Features
 - ⚡ **Lightning Fast**: Powered by Rust and Tauri for better speed and efficiency.
