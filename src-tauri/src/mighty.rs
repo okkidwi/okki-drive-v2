@@ -1,20 +1,18 @@
 // ! ALWAYS ADMIN MODE.
-// TODO: SPAWN THE CONTROL PROCESS THROUGH AN ADMIN CMD TO BYPASS UIACCESS CUZ FCK WINDOWS AND THEIR LIMITATIONS AND THIS IS STAYING EVEN AFTER FIX CUZ IT MADE ME MAD !
 
-
-
+#[cfg(target_os = "windows")]
 pub mod windows_controls_processes {
 
-    use windows::Win32::Foundation::{BOOL, FALSE, HWND, LPARAM, LRESULT, TRUE, WPARAM};
-    use windows::Win32::UI::WindowsAndMessaging::{
-        EnumChildWindows, EnumWindows, GetClassNameW, GetWindowTextLengthW, GetWindowTextW, PostMessageW, SendMessageW, BM_CLICK, WM_SETTEXT,
-    };
-    use windows::Win32::UI::Controls::{PBM_GETPOS, PBM_GETRANGE};
     use std::ffi::OsString;
     use std::os::windows::ffi::OsStringExt;
     use std::{thread, time};
+    use windows::Win32::Foundation::{BOOL, FALSE, HWND, LPARAM, LRESULT, TRUE, WPARAM};
     use windows::Win32::System::SystemInformation::*;
-
+    use windows::Win32::UI::Controls::{PBM_GETPOS, PBM_GETRANGE};
+    use windows::Win32::UI::WindowsAndMessaging::{
+        EnumChildWindows, EnumWindows, GetClassNameW, GetWindowTextLengthW, GetWindowTextW,
+        PostMessageW, SendMessageW, BM_CLICK, WM_SETTEXT,
+    };
 
     fn get_window_title(hwnd: HWND) -> Option<String> {
         unsafe {
@@ -61,7 +59,7 @@ pub mod windows_controls_processes {
             }
         }
     }
-    
+
     fn get_setup_process_title(proc_title: &str) -> HWND {
         let mut target_hwnd: HWND = HWND(std::ptr::null_mut());
 
@@ -77,10 +75,10 @@ pub mod windows_controls_processes {
                     unsafe {
                         *data.target_hwnd = hwnd;
                     }
-                    return FALSE.into(); // Stop enumeration with special FALSE
+                    return FALSE; // Stop enumeration with special FALSE
                 }
             }
-            TRUE.into() // Continue enumeration with special TRUE
+            TRUE // Continue enumeration with special TRUE
         }
 
         let data = TitleSearchData {
@@ -89,7 +87,10 @@ pub mod windows_controls_processes {
         };
 
         let _ = unsafe {
-            EnumWindows(Some(enum_windows_callback), LPARAM(&data as *const _ as isize))
+            EnumWindows(
+                Some(enum_windows_callback),
+                LPARAM(&data as *const _ as isize),
+            )
         };
 
         target_hwnd
@@ -105,10 +106,10 @@ pub mod windows_controls_processes {
         if let Some(window_text) = get_window_text(hwnd) {
             if window_text.contains(data.search_text) {
                 unsafe { *data.target_hwnd = hwnd };
-                return FALSE.into(); // Stop enumeration with special FALSE
+                return FALSE; // Stop enumeration with special FALSE
             }
         }
-        TRUE.into() // Continue enumeration with special TRUE
+        TRUE // Continue enumeration with special TRUE
     }
 
     pub fn find_child_window_with_text(search_text: &str, proc_title: &str) -> Option<HWND> {
@@ -124,10 +125,11 @@ pub mod windows_controls_processes {
             let _ = EnumChildWindows(
                 parent_hwnd,
                 Some(enum_child_windows_proc),
-                LPARAM(&data as *const _ as isize)
+                LPARAM(&data as *const _ as isize),
             );
         }
 
+        // Don't use clippy here, I need to check null_pointer not necessarily null. Confusion might happen on some edge-cases.
         if target_hwnd.0 != std::ptr::null_mut() {
             Some(target_hwnd)
         } else {
@@ -135,82 +137,86 @@ pub mod windows_controls_processes {
         }
     }
 
-
-
     pub fn click_ok_button() {
         let ok_button_text = "OK";
         let first_window_title = "Select Setup Language";
-        let ok_button_hwnd = find_child_window_with_text(ok_button_text, first_window_title);
-    
-        if let Some(hwnd) = ok_button_hwnd {
-            unsafe {
 
-                let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
-                
-                if result.is_err() {
-                    eprintln!("PostMessageW failed to send the message. Result  {:#?} ", result);
-                } else {
-                     // Wait 5 seconds for the other part of the setup to start.
-                     thread::sleep(time::Duration::from_millis(5000));
-                    println!("Posted click message to OK button!");
-                }
-            }
-        } else {
-            println!("OK button not found.");
-        }
-    
-    }
+        loop {
+            let ok_button_hwnd = find_child_window_with_text(ok_button_text, first_window_title);
 
+            if let Some(hwnd) = ok_button_hwnd {
+                unsafe {
+                    let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
 
-
-
-    pub fn click_8gb_limit(should_limit: bool) {
-        let limit_button_text = "Limit installer to 2 GB of RAM usage";
-        let first_window_title = "Setup -";
-        let limit_button_hwnd = find_child_window_with_text(limit_button_text, first_window_title);
-    
-        unsafe {
-            // Initialize MEMORYSTATUSEX structure
-            let mut mem_status = MEMORYSTATUSEX {
-                dwLength: std::mem::size_of::<MEMORYSTATUSEX>() as u32,
-                ..MEMORYSTATUSEX::default()
-            };
-    
-            // Call GlobalMemoryStatusEx
-            match GlobalMemoryStatusEx(&mut mem_status) {
-                Ok(_) => {
-                    // Calculate the total RAM in GB
-                    let total_ram_gb = mem_status.ullTotalPhys / (1024 * 1024 * 1024);
-                    println!("Total RAM: {} GB", total_ram_gb);
-    
-                    if total_ram_gb <= 8 {
-                        // If total RAM is 8 GB or less, check the checkbox
-                        check_limit_button(limit_button_hwnd);
+                    if result.is_err() {
+                        eprintln!(
+                            "PostMessageW failed to send the message. Result  {:#?}",
+                            result
+                        );
                     } else {
-                        // If total RAM is more than 8 GB, check the should_limit flag
-                        if should_limit {
-                            check_limit_button(limit_button_hwnd);
-                        } else {
-                            println!("No action needed based on should_limit flag.");
-                        }
+                        // // Wait 5 seconds for the next part of the setup to start
+                        // thread::sleep(time::Duration::from_millis(5000));
+                        println!("Posted click message to OK button!");
                     }
                 }
-                Err(err) => {
-                    eprintln!("Failed to get memory status. Error: {}", err.message());
-                }
+                break; // Exit the loop once the button is clicked
+            } else {
+                println!("OK button not found. Retrying in 2 seconds...");
+                thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
             }
         }
     }
-    
+
+    /// Function to check the user's ram.
+    ///
+    /// Will return `true` if the user has 9gb or less and false if they have more.
+    ///
+    /// Usually used before running the UI automation.
+    pub fn check_8gb_limit() -> bool {
+        let mut sys: sysinfo::System = sysinfo::System::new_all();
+
+        sys.refresh_all();
+        let total_memory = sys.total_memory();
+
+        // Convert to megabytes
+        let total_memory_mb = total_memory / 1024;
+
+        // Use 9gB because the sysinfo might round it and better be safe than sorry.
+        // No need for an if-else statement.
+        total_memory_mb <= 9
+    }
+
+    pub fn click_8gb_limit() {
+        let limit_button_text = "Limit installer to 2 GB of RAM usage";
+        let first_window_title = "Setup -";
+
+        loop {
+            let limit_button_hwnd =
+                find_child_window_with_text(limit_button_text, first_window_title);
+
+            if let Some(hwnd) = limit_button_hwnd {
+                check_limit_button(Some(hwnd));
+
+                break; // Exit the loop once the button is clicked or checked
+            } else {
+                println!("Limit button not found. Retrying in 2 seconds...");
+                thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
+            }
+        }
+    }
+
     fn check_limit_button(hwnd: Option<HWND>) {
         if let Some(hwnd) = hwnd {
             unsafe {
                 let wparam = WPARAM(0);
                 let lparam = LPARAM(0);
                 let result = PostMessageW(hwnd, BM_CLICK, wparam, lparam);
-    
+
                 if result.is_err() {
-                    eprintln!("PostMessageW failed to send the message. Result  {:#?} ", result);
+                    eprintln!(
+                        "PostMessageW failed to send the message. Result  {:#?} ",
+                        result
+                    );
                 } else {
                     println!("Posted click message to Limit button!");
                 }
@@ -220,19 +226,20 @@ pub mod windows_controls_processes {
         }
     }
 
-
     pub fn click_next_button() {
         let ok_button_text = "Next >";
         let first_window_title = "Setup -";
         let ok_button_hwnd = find_child_window_with_text(ok_button_text, first_window_title);
-    
+
         if let Some(hwnd) = ok_button_hwnd {
             unsafe {
-
                 let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
-                
+
                 if result.is_err() {
-                    eprintln!("PostMessageW for Next Button failed to send the message. Result  {:#?} ", result);
+                    eprintln!(
+                        "PostMessageW for Next Button failed to send the message. Result  {:#?} ",
+                        result
+                    );
                 } else {
                     println!("Posted click message to Next button!");
                 }
@@ -242,40 +249,52 @@ pub mod windows_controls_processes {
         }
     }
 
-
     pub fn change_path_input(input_text: &str) {
         let first_window_title = "Setup -";
         let parent_hwnd = get_setup_process_title(first_window_title);
-    
+
         let mut text_input_hwnd: HWND = HWND(std::ptr::null_mut());
-    
+
         unsafe extern "system" fn find_text_input_proc(hwnd: HWND, l_param: LPARAM) -> BOOL {
             let text_input_hwnd = l_param.0 as *mut HWND;
             let class_name = get_class_name(hwnd); // Helper function to get the class name of the control
-            println!("{:#?}", class_name);
-            if class_name == "TEdit" { // The class name for text input fields is typically "Edit"
+
+            if class_name == "TEdit" {
+                // The class name for text input fields is typically "Edit"
                 println!("found it");
                 unsafe {
                     *text_input_hwnd = hwnd;
                 }
-                return FALSE.into(); // Stop enumeration with special FALSE
+                return FALSE; // Stop enumeration with special FALSE
             }
-            TRUE.into() // Continue enumeration with special TRUE
+            TRUE // Continue enumeration with special TRUE
         }
-    
+
         unsafe {
-            let _ = EnumChildWindows(parent_hwnd, Some(find_text_input_proc), LPARAM(&mut text_input_hwnd as *mut _ as isize));
+            let _ = EnumChildWindows(
+                parent_hwnd,
+                Some(find_text_input_proc),
+                LPARAM(&mut text_input_hwnd as *mut _ as isize),
+            );
         }
-    
+
         if text_input_hwnd.0 != std::ptr::null_mut() {
             unsafe {
                 println!("{:#?}", input_text);
                 let mut text_wide: Vec<u16> = input_text.encode_utf16().collect();
                 text_wide.push(0); // Null-terminate the string like in C++ because Rust basic strings do not implement null-terminated strings. Could have used CString.
-                let result = SendMessageW(text_input_hwnd, WM_SETTEXT, WPARAM(0), LPARAM(text_wide.as_ptr() as isize));
-                
+                let result = SendMessageW(
+                    text_input_hwnd,
+                    WM_SETTEXT,
+                    WPARAM(0),
+                    LPARAM(text_wide.as_ptr() as isize),
+                );
+
                 if result == LRESULT(0) {
-                    eprintln!("SendMessageW failed to set the text. Error code: {:#?}", result);
+                    eprintln!(
+                        "SendMessageW failed to set the text. Error code: {:#?}",
+                        result
+                    );
                 } else {
                     println!("Set text in the input field successfully!");
                 }
@@ -283,93 +302,94 @@ pub mod windows_controls_processes {
         } else {
             println!("Text input field not found.");
         }
-
-
     }
-    
 
     pub fn click_install_button() {
-        
         println!("started");
         let install_button_text = "Install";
         let first_window_title = "Setup -";
 
-        let install_button_hwnd = find_child_window_with_text(install_button_text, first_window_title);
+        loop {
+            let install_button_hwnd =
+                find_child_window_with_text(install_button_text, first_window_title);
 
-        if let Some(hwnd) = install_button_hwnd {
-            unsafe {
-                let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
+            if let Some(hwnd) = install_button_hwnd {
+                unsafe {
+                    let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
 
-                if result.is_err() {
-                    eprintln!("PostMessageW for Install Button failed to send the message. Result  {:#?} ", result);
-                } else {
-                    println!("Posted click message to Next button!");
+                    if result.is_err() {
+                        eprintln!("PostMessageW for Install Button failed to send the message. Result  {:#?} ", result);
+                    } else {
+                        println!("Posted click message to Install button!");
+                        break;
+                    }
                 }
+            } else {
+                println!("Install button not found. Trying again in 2 seconds...");
+                thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
             }
-        } else {
-            println!("Install button not found.");
         }
-
     }
 
-    #[ignore = "Will be used later"]
+    #[allow(dead_code)]
     pub fn poll_progress_bar_until_complete() -> f64 {
         let first_window_title = "Setup -";
         let parent_hwnd = get_setup_process_title(first_window_title);
-    
+
         let mut progress_bar_hwnd: HWND = HWND(std::ptr::null_mut());
-    
+
         unsafe extern "system" fn find_progress_bar_proc(hwnd: HWND, l_param: LPARAM) -> BOOL {
             let text_input_hwnd = l_param.0 as *mut HWND;
             let class_name = get_class_name(hwnd);
-    
+
             if class_name == "TNewProgressBar" {
                 println!("found it");
                 unsafe {
                     *text_input_hwnd = hwnd;
                 }
-                return FALSE.into();
+                return FALSE;
             }
-            TRUE.into()
+            TRUE
         }
-    
+
         unsafe {
-            let _ = EnumChildWindows(parent_hwnd, Some(find_progress_bar_proc), LPARAM(&mut progress_bar_hwnd as *mut _ as isize));
+            let _ = EnumChildWindows(
+                parent_hwnd,
+                Some(find_progress_bar_proc),
+                LPARAM(&mut progress_bar_hwnd as *mut _ as isize),
+            );
         }
-    
+
         if progress_bar_hwnd.0 != std::ptr::null_mut() {
-            
             let mut final_percentage = 0.1; // Variable to hold the result make it 0.1 to bypass the is_normal()
-            
 
-                unsafe {
-                    // Get the current value of the progress bar
-                    let current_value = SendMessageW(progress_bar_hwnd, PBM_GETPOS, WPARAM(0), LPARAM(0)).0 as i32;
-    
-                    // Get the high and low values of the progress bar range
-                    let get_high_value = SendMessageW(progress_bar_hwnd, PBM_GETRANGE, WPARAM(0), LPARAM(0));
-                    let get_low_value = SendMessageW(progress_bar_hwnd, PBM_GETRANGE, WPARAM(1), LPARAM(0));
-    
-                    let min = get_low_value.0 as i32;
-                    let max = get_high_value.0 as i32;
-    
-                    // Calculate the percentage value of the progress bar add 0.1 just in case.
-                    let percentage = (((current_value - min) as f64 / (max - min) as f64) * 100.0) + 0.1;
-    
-                    // Print the percentage value and limit it to 2 numbers after the decimal point
-                    println!("Progress: {:.2}%", percentage);
-                    final_percentage = percentage;
-                }
-    
+            unsafe {
+                // Get the current value of the progress bar
+                let current_value =
+                    SendMessageW(progress_bar_hwnd, PBM_GETPOS, WPARAM(0), LPARAM(0)).0 as i32;
 
-    
+                // Get the high and low values of the progress bar range
+                let get_high_value =
+                    SendMessageW(progress_bar_hwnd, PBM_GETRANGE, WPARAM(0), LPARAM(0));
+                let get_low_value =
+                    SendMessageW(progress_bar_hwnd, PBM_GETRANGE, WPARAM(1), LPARAM(0));
+
+                let min = get_low_value.0 as i32;
+                let max = get_high_value.0 as i32;
+
+                // Calculate the percentage value of the progress bar add 0.1 just in case.
+                let percentage =
+                    (((current_value - min) as f64 / (max - min) as f64) * 100.0) + 0.1;
+
+                // Print the percentage value and limit it to 2 numbers after the decimal point
+                println!("Progress: {:.2}%", percentage);
+                final_percentage = percentage;
+            }
+
             final_percentage // Return the stored result after breaking out of the loop
         } else {
             println!("Progress bar not found.");
             0.0 // Return 0.0 if the progress bar was not found
         }
     }
-    
-    
-
 }

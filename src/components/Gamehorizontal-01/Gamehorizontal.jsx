@@ -7,15 +7,19 @@ import Carousel from '../Carousel-01/Carousel';
 import { invoke } from '@tauri-apps/api/tauri';
 import { translate } from '../../translation/translate';
 import { open } from '@tauri-apps/api/dialog';
-import { appCacheDir, appConfigDir } from '@tauri-apps/api/path';
-import { writeFile } from '@tauri-apps/api/fs';
-import './GameHorizontal.css';
+import { appCacheDir, appDataDir } from '@tauri-apps/api/path';
+import { writeFile, readTextFile, removeFile } from '@tauri-apps/api/fs';
+import './Gamehorizontal.css';
+import { globalTorrentInfo, setGlobalTorrentInfo, setTorrentTrigger } from '../functions/dataStoreGlobal';
+import { setRestartTorrentInfo, restartTorrentInfo } from '../functions/dataStoreGlobal';
 
 const cacheDir = await appCacheDir();
-const cacheDirPath = cacheDir.replace(/\\/g, '/');
+const cacheDirPath = cacheDir;
 
-const appDir =  await appConfigDir();
-const dirPath = appDir.replace(/\\/g, '/');
+console.log("App Cache :", cacheDir)
+
+const appDir =  await appDataDir();
+const dirPath = appDir;
 
 const singularGamePath = `${dirPath}tempGames/single_game_images.json`;
 const ftgConfigPath = `${dirPath}fitgirlConfig/settings.json`;
@@ -50,7 +54,10 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
     {
         const lastInputPath = localStorage.getItem('LUP');
         const currentCDG = JSON.parse(localStorage.getItem('CDG'));
-        const currentCDGStats = JSON.parse(localStorage.getItem('CDG_Stats'));
+        const currentCDGStats = JSON.parse(localStorage.getItem('CDG_Stats')) || [];
+
+        
+
         console.log(currentCDGStats);
     
         const infoSingleCDG = {
@@ -78,11 +85,11 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     confirmButtonText: 'Yes, resume it!',
                     cancelButtonText: 'Cancel'
                 }).then(async (result) => {
-                    if(result.isConfirmed) {
+                    if (result.isConfirmed) {
                         startDownloadProcess();
                     }
                 });
-            }else {
+            } else {
                 Swal.fire({
                     title: "Error",
                     text: "A different game is already downloading.",
@@ -90,15 +97,49 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     showCancelButton: true,
                     confirmButtonText: 'Delete Current Download',
                     cancelButtonText: 'Cancel'
-                }).then(async (result) => {
+                }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: 'Are you sure?',
-                            text: "Do you really want to delete the current download? It will stop the current download but you can still start it later.",
+                            text: "Do you really want to delete the current download? It will stop the current download but won't delete the files so you can still start it later.",
+                            footer: 'You can also delete the files directly by clicking on this button <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Yes, delete it!',
-                            cancelButtonText: 'Cancel'
+                            cancelButtonText: 'Cancel',
+                            didRender: () => {
+                                let CTG = localStorage.getItem('CTG');
+                                let hash = JSON.parse(CTG).torrent_idx;
+        
+                                if (hash) {
+                                    // Add event listener for the custom "Delete Files" button
+                                    const deleteFilesBtn = document.getElementById('delete-files-btn');
+                                    deleteFilesBtn.addEventListener('click', async () => {
+                                        try {
+                                            await invoke('api_delete_torrent', { torrentIdx: hash });
+                                            Swal.fire({
+                                                title: "Deleted",
+                                                text: "The files of the current download have been deleted.",
+                                                icon: "success"
+                                            }).then(()=> {
+                                                localStorage.removeItem('CTG');
+                                                startDownloadProcess();
+                                            });
+                                        } catch (error) {
+                                            Swal.fire({
+                                                title: "Error Deleting Files",
+                                                text: `An error occurred while deleting the files: ${error}`,
+                                                footer: "If you do not understand the error, please contact us on Discord before opening any issues on GitHub.",
+                                                icon: 'error'
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    const deleteFilesBtn = document.getElementById('delete-files-btn');
+                                    deleteFilesBtn.style.backgroundColor = 'gray';
+                                    deleteFilesBtn.disabled = true;
+                                }
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 localStorage.removeItem('CDG');
@@ -154,7 +195,6 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                         const exists = await invoke('check_folder_path', { path: inputPath });
                         if (exists) {
                             localStorage.setItem('LUP', inputPath);
-                            localStorage.setItem('CDG', JSON.stringify([infoSingleCDG]));  // Store only the current game
         
                             // Update the game path in settings.json
                             await updateGamePathInSettings(inputPath);
@@ -164,17 +204,26 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             const fileContentObj = await readFile(ftgConfigPath);
                             const fileContent = fileContentObj.content;
                             const configData = JSON.parse(fileContent);
-                            let should_bool_limit = configData.two_gb_limit
-                            fileList = await invoke('start_torrent_command', {
+                            let should_bool_limit = configData.two_gb_limit;
+                            await invoke('api_initialize_torrent_manager', {downloadPath: inputPath, appCachePath: cacheDirPath, appSettingsPath: dirPath})
+                            fileList = await invoke('api_get_torrent_details', {
                                 magnetLink: cdgGameMagnet,
-                                downloadPath: inputPath,
-                                listCheckbox: externalCheckboxes(),
-                                shouldLimit: should_bool_limit,
-
                             });
-        
+                            
                             console.log("File list:", fileList);
-        
+                            
+                            let correctFileList = JSON.stringify(fileList)
+                            if (!correctFileList) {
+                        
+                                Swal.fire({
+                                    title: "Error Starting The Download!",
+                                    text: "An issue arised probably due to an incorrect magnetlink.",
+                                    icon: "error"
+                                })
+                                return;
+                            }
+                            localStorage.setItem('CTG', correctFileList);
+
                             // Add the new checkboxes here
                             const externalCheckboxesHtml = `
                                 <div>
@@ -187,34 +236,53 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                 </div>
                             `;
         
-                            const fileCheckboxes = fileList.map((file, index) => {
+
+                            const fileCheckboxes = fileList.torrent_files_names.map((file, index) => {
                                 const isOptional = file.includes('optional');
+                                const isSelective = file.includes('fg-selective');
+                                
+                                let label = file;
+                            
+                                // Customize labels for fg-selective and fg-optional files
+                                if (isSelective) {
+                                    // Extract language or feature from the filename
+                                    const languageOrFeature = file.match(/fg-selective-(.*)\.bin/i);
+                                    label = languageOrFeature ? `Select ${languageOrFeature[1].replace(/-/g, ' ').charAt(0).toUpperCase() + languageOrFeature[1].replace(/-/g, ' ').slice(1)} Language` : 'Select Language';
+                                } else if (isOptional) {
+                                    label = `Optional: ${file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').charAt(0).toUpperCase() + file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').slice(1)}`;
+                                }
+                            
                                 return `
-                                    <div style="display: ${isOptional ? 'block' : 'none'};">
-                                        <input type="checkbox" id="file${index}" value="${index}" ${isOptional ? '' : 'checked'}>
-                                        <label for="file${index}">${file}</label>
+                                    <div style="display: ${isOptional || isSelective ? 'block' : 'none'};">
+                                        <input type="checkbox" id="file${index}" value="${index}" ${!isOptional && !isSelective ? 'checked' : ''}>
+                                        <label for="file${index}">${label}</label>
                                     </div>
                                 `;
                             }).join('');
-        
+                            
+                            const dividerHtml = `
+                            <div style="border-top: 1px solid #52515185; margin: 10px 0;"></div>
+                            `;
+                            
                             const { value: selectedFiles } = await Swal.fire({
                                 title: "Select Files to Download",
                                 html: 
                                     `<form id="fileSelectionForm">
                                         ${externalCheckboxesHtml}
+                                        ${dividerHtml}
                                         ${fileCheckboxes}
                                     </form>`,
                                 confirmButtonText: 'Download Selected Files',
                                 showCancelButton: true,
                                 preConfirm: () => {
                                     const form = document.getElementById('fileSelectionForm');
-        
+                            
                                     // Check the status of DirectX and Microsoft C++ checkboxes
                                     const directXCheckbox = form.querySelector('#downloadDirectX');
                                     const msvcCheckbox = form.querySelector('#downloadMSCpp');
-        
+                            
                                     const uncheckedOptions = [];
-        
+                            
                                     if (directXCheckbox.checked) {
                                         uncheckedOptions.push("directx");
                                     } else {
@@ -225,15 +293,15 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                     } else {
                                         uncheckedOptions.push("")
                                     }
-        
+                            
                                     // Update the signal with unchecked options
                                     setExternalCheckboxes(uncheckedOptions);
-        
+                            
+                                    // Gather selected files from form
                                     const selected = Array.from(form.querySelectorAll('input[type="checkbox"]:checked'))
                                     .map(checkbox => parseInt(checkbox.value, 10)) // Convert strings to numbers
                                     .filter(value => !isNaN(value)); // Ensure NaN values are filtered out
                             
-                                console.log("Selected files:", selected);
                                     console.log("Selected files:", selected);
                                     return selected;
                                 }
@@ -242,19 +310,46 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             if (selectedFiles) {
                                 console.log("Files selected for download:", selectedFiles);
                                 // Send the selected files to the backend
-                                await invoke('select_files_to_download', { selectedFiles });
+
                                 console.log('Files selected for download:', selectedFiles);
         
                                 // Log the external checkboxes signal value
                                 console.log('External checkboxes:', externalCheckboxes());
-        
+                                
+
+                                const CTG = localStorage.getItem('CTG');
+                                let hash = JSON.parse(CTG).torrent_idx;
+                                let outputFolder = JSON.parse(CTG).torrent_output_folder;
+
+                                setGlobalTorrentInfo({
+                                    torrentIdx: hash,
+                                    torrentOutputFolder: outputFolder,
+                                    checkboxesList: externalCheckboxes(),
+                                    twoGbLimit: should_bool_limit
+                                });
+                                
+                                await invoke('api_download_with_args', {
+                                    magnetLink: cdgGameMagnet,
+                                    downloadFileList: selectedFiles
+                                })
+
+                                
+
+                                setRestartTorrentInfo({
+                                    magnetLink: cdgGameMagnet,
+                                    fileList: selectedFiles
+                                })
+                                
                                 Swal.fire({
                                     title: "Starting Download!",
                                     text: "The selected files are now downloading.",
                                     icon: "success"
+                                }).then(() => {
+                                    localStorage.setItem('CDG', JSON.stringify([infoSingleCDG]));  // Store only the current game
+                                    
                                 });
-        
-                                window.dispatchEvent(new Event('start-download'));
+                                
+                                setTorrentTrigger(true);
                             } 
                         } else {
                             Swal.fire({
@@ -308,7 +403,16 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
             const fileContentObj = await readFile(filePath);
             const fileContent = fileContentObj.content;
             const gameData = JSON.parse(fileContent);
-            const game = gameData.find(game => game.title === title);
+            let game = gameData.find(game => game.title === title);
+
+            if (game && game.img) {
+                // Check if game.img contains a comma
+                const commaIndex = game.img.indexOf(',');
+                if (commaIndex !== -1) {
+                    // Get the part after the comma
+                    game.img = game.img.substring(commaIndex + 1).trim();
+                }
+            }
             console.log(gameData)
             console.log(title)
             setGameInfo(game);
@@ -428,29 +532,31 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
         setDescOpen(!isDescOpen());
     }
 
-    function clearAllTimeoutsID() {
+    async function clearAllTimeoutsID() {
         clearTimeout(jsonCheckingTimeoutID);
         clearTimeout(errorCheckingTimeoutID);
         clearTimeout(imagesCheckingTimeoutID);
     }
-
+    
     async function slideDown() {
         const horizontalSlide = document.querySelector('.horizontal-slide');
         horizontalSlide.style.transform = 'translateY(100%)';
+        horizontalSlide.addEventListener('transitionend', () => {
+            horizontalSlide.remove();
+        });
         const body = document.body;
         body.style = '';
-        invoke(`stop_get_games_images`);
-        clearAllTimeoutsID();
+        
+        await invoke(`stop_get_games_images`);
+        await clearAllTimeoutsID();
         if(searchResultDisplay()) {
             document.getElementById('search-results').style.display = 'flex';
         } else {
             return;
         }
-           
-        setTimeout(async () => {
-            await clearFile(singularGamePath);
-            horizontalSlide.remove();
-        }, 500);
+
+        await clearFile(singularGamePath)
+        
     }
 
     return (

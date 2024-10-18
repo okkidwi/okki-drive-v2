@@ -1,5 +1,5 @@
 import { createSignal, onMount } from "solid-js";
-import { appConfigDir } from "@tauri-apps/api/path";
+import { appDataDir } from "@tauri-apps/api/path";
 import readFile from "../../functions/readFileRust";
 
 import './Recentlydownloaded.css';
@@ -7,8 +7,8 @@ import './Recentlydownloaded.css';
 function Recentlydownloadedgames() {
 
     onMount( async () => {
-        const appDir =  await appConfigDir();
-        const dirPath = appDir.replace(/\\/g, '/');
+        const appDir =  await appDataDir();
+        const dirPath = appDir;
 
         let downloadedGamesPath = `${dirPath}data/downloaded_games.json`;
 

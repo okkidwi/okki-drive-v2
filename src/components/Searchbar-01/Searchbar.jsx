@@ -2,7 +2,7 @@ import { createEffect, createSignal, onMount } from 'solid-js';
 import { render } from 'solid-js/web';
 import readFile from '../functions/readFileRust';
 import { invoke } from '@tauri-apps/api';
-import { appConfigDir } from '@tauri-apps/api/path';
+import { appDataDir } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import './Searchbar.css'; 
 import { translate } from '../../translation/translate'; 
@@ -14,6 +14,7 @@ function Searchbar() {
     const [searchedGameTitle, setSearchedGameTitle] = createSignal('');
     const [selectedGameLink, setSelectedGameLink] = createSignal(null); 
     const [showDragonBallSVG, setShowDragonBallSVG] = createSignal(false);  // Signal for SVG display
+    const [isDialogOpen, setIsDialogopen] = createSignal(false);
 
     function clearSearch() {
         setSearchResults([]);
@@ -40,8 +41,8 @@ function Searchbar() {
 
     async function showResults(query) {
         let requests = [];
-        const appDir =  await appConfigDir();
-        const dirPath = appDir.replace(/\\/g, '/');
+        const appDir =  await appDataDir();
+        const dirPath = appDir;
         
         for (let i = 1; i <= 6; i++) {
             let sitemapURL = `${dirPath}sitemaps/post-sitemap${i}.xml`;
@@ -137,12 +138,14 @@ function Searchbar() {
     }
 
     async function getConfigDir() {
-        const appDir =  await appConfigDir();
-        const dirPath = appDir.replace(/\\/g, '/');
+        const appDir =  await appDataDir();
+        const dirPath = appDir;
         const singularGameFilePath = `${dirPath}tempGames/singular_game_temp.json`;
 
         return singularGameFilePath;
     }
+
+
 
     return (
         <div className='searchbar-container'>
@@ -180,6 +183,7 @@ function Searchbar() {
                     onInput={handleInputChange} 
                     value={searchTerm()} // Ensure the input value is controlled
                 />
+                
             </div>
             <div id="search-results" className="search-results">
                 {searchResults().length === 0 ? (
@@ -200,6 +204,7 @@ function Searchbar() {
                     </ul>
                 )}
             </div>
+            
         </div>
     );
 }

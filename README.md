@@ -20,15 +20,19 @@ Fit Launcher is a 🚀 **blazingly fast** 🚀 game launcher designed specifical
 ![Launcher Screenshot 1](images/screenshot1.png)
 ![Launcher Screenshot 2](images/screenshot2.png)
 
+## Installation Guide
 
-### Running the Launcher
+### Standard Mode
 
-To run the Fit Launcher, simply execute the setup and install it inside
-`C:/Program Files/` then run the executable 😃:
+1. **Visit the Release Page**  
+   Go to the [release page here](https://github.com/CarrotRub/Fit-Launcher/releases/latest).
 
-```bash
-./"Fit Launcher.exe"
-```
+2. **Download the Executable**  
+   Scroll down until you find the executable, which will look like this `Fit.Launcher_1.X.X_x64_en-US.msi`
+
+3. **Run it !**
+   Once downloaded, simply execute the setup and install it inside
+   `C:/Program Files/` then run the executable 😃 !
 
 ### Development Mode
 
@@ -68,7 +72,7 @@ Got questions or want to hang out with our users? Join us on Discord! Big thanks
 - **CarrotRub** - Me, Developer of this app :3.
 - **Kürst** - Discord Moderator
 - **Vintage_Soldier** - App Design
-- **SimplyStoned** - Maintenance of the Old Launcher
+- **SimplyStoned** - Maintenance of the Old Launcher and Contributor.
 
 ---
 

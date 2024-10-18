@@ -15,6 +15,13 @@
     z-index: 3;
 }
 
+.img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
 .blur-overlay {
   position: fixed;
   top: 0;
@@ -45,3 +52,7 @@
 .Popular-repacks { grid-row: 1; } /* First row */
 .New-Games { grid-row: 2; } /* Second row */
 .Recently-Updated { grid-row: 3; } /* Third row */
+
+.gamehub-container::-webkit-scrollbar {
+    display: none
+}
