@@ -540,7 +540,7 @@ pub mod basic_scraping {
             };
             popular_games.push(popular_game);
 
-            if game_count >= 20 {
+            if game_count >= 5000 {
                 break;
             }
         }
@@ -738,7 +738,7 @@ pub mod basic_scraping {
             recent_games.push(recently_updated_game);
 
             // Optionally, limit the number of games to scrape
-            if game_count >= 20 {
+            if game_count >= 5000 {
                 break;
             }
         }
