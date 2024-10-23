@@ -6,7 +6,7 @@ import Popularrepacks from '../../components/Popularrepacks-01/Popularrepacks';
 import UpdatedGames from '../../components/Updatedrepacks-01/Updatedrepacks';
 import clearFile from '../../components/functions/clearFileRust';
 import { appDataDir } from "@tauri-apps/api/path";
-import { readTextFile, writeTextFile, exists } from "@tauri-apps/api/fs';
+import { readTextFile, writeTextFile, exists } from "@tauri-apps/api/fs";
 import { createDir } from "@tauri-apps/api/fs";
 import { listen, emit } from '@tauri-apps/api/event';
 
@@ -124,23 +124,23 @@ function Gamehub() {
 
     createEffect(() => {
         const title_category = document.querySelectorAll(".title-category h2");
-        const title_category_svg = document.querySelectorAll(".filter-box svg");
+        const title_category_svg = document.querySelectorAll(".filter-box svg")
         if (backgroundMainBrightness() === "dark") {
             title_category.forEach((el) => {
                 el.setAttribute("text-color-theme", "light");
-            });
+            })
             title_category_svg.forEach((el) => {
                 el.setAttribute("text-color-theme", "light");
-            });
+            })
         } else if (backgroundMainBrightness() === "light") {
             title_category.forEach((el) => {
                 el.setAttribute("text-color-theme", "dark");
-            });
+            })
             title_category_svg.forEach((el) => {
                 el.setAttribute("text-color-theme", "dark");
-            });
+            })
         }
-    });
+    })
 
     createEffect(() => {
         if (!settings().background_image_path_64) {
