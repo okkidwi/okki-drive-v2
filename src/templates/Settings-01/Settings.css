@@ -210,7 +210,7 @@ body {
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  display: block
+  display: block;
   white-space: nowrap;
 }
 
