@@ -197,20 +197,20 @@ body {
 .donation-buttons {
   display: flex;
   gap: 10px;
-  margin-top: 8px;
-  margin-bottom: 5px;
+  margin-top: 50px;
+  margin-bottom: 15px;
 }
 
 .trakteer-btn,
 .saweria-btn {
   padding: 5px 5px;
-  width: 600px;
   text-decoration: none;
   color: white;
   border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  display: inline-block;
 }
 
 .trakteer-btn {
