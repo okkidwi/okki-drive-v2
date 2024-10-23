@@ -203,16 +203,16 @@ body {
 
 .trakteer-btn,
 .saweria-btn {
-  padding: 5px 5px;
+  padding: 10px 10px;
+  margin-bottom: -20px
   text-decoration: none;
   color: white;
   border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  display: block;
+  display: inline-block;
   white-space: nowrap;
-  line-height: 14px;
 }
 
 .trakteer-btn {
