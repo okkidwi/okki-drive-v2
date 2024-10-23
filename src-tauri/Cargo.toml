@@ -1,9 +1,9 @@
 [package]
 name = "okki-drive"
-version = "1.0.0"
+version = "0.0.1"
 description = "OkkiDrive"
 authors = ["OkkiDwi"]
-edition = "2024"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
