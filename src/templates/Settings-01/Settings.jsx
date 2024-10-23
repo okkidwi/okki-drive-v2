@@ -574,36 +574,6 @@ const SettingsPage = () => {
                 </div>
             </section>
 
-            .donation-buttons {
-                display: flex;
-                gap: 10px;
-                margin-top: 15px;
-            }
-
-            .trakteer-btn,
-            .saweria-btn {
-                padding: 10px 20px;
-                text-decoration: none;
-                color: white;
-                font-weight: bold;
-                border-radius: 5px;
-                font-size: 16px;
-                transition: background-color 0.3s ease;
-            }
-
-            .trakteer-btn {
-                background-color: #BE1E2D;
-            }
-
-            .saweria-btn {
-                background-color: #F5A623;
-            }
-
-            .trakteer-btn:hover,
-            .saweria-btn:hover {
-                opacity: 0.8;
-            }
-
                 <button class="boton-elegante" style={"width: fit-content;"} onClick={handleSave}>
                     Save Settings
                 </button>
