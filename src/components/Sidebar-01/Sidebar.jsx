@@ -34,21 +34,6 @@ function Sidebar() {
 
 
 
-      <A href="/catalog" link="" aria-current="page">
-          <li id="link-catalog">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book">
-                  <path d="M4 4h16v16H4z" />
-                  <path d="M4 4v16h16V4" />
-              </svg>
-            
-              <p className="links-texts">Catalog</p>
-            
-          </li>
-      </A>
-          
-
-
-
         <A href="/my-library" link="" aria-current="page">
             <li id="link-library">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid">
