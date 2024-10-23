@@ -506,9 +506,9 @@ const SettingsPage = () => {
                 </div>
             </section>
 
-            {/* Fit Launcher Information */}
+            {/* Okki Drive Information */}
             <section>
-                <h2>Fit Launcher Information</h2>
+                <h2>Okki Drive Information</h2>
                 <div class="form-group">
                     <p>Application Version: {version()}</p>
                 </div>
@@ -528,7 +528,7 @@ const SettingsPage = () => {
                 <div class="card">
                     <a
                         class="social-link1"
-                        href="https://github.com/CarrotRub/Fit-Launcher/"
+                        href="https://www.facebook.com/okkidwi27/"
                         target="_blank"
                     >
                         <svg
@@ -542,7 +542,7 @@ const SettingsPage = () => {
                     </a>
                     <a
                         class="social-link2"
-                        href="https://discord.gg/cXaBWdcUSF"
+                        href="https://t.me/okkidwi"
                         target="_blank"
                     >
                         <svg
