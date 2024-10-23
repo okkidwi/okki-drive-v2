@@ -1,9 +1,9 @@
 [package]
-name = "fit-launcher"
-version = "0.0.1"
-description = "FitLauncher"
-authors = ["CarrotRub"]
-edition = "2021"
+name = "okki-drive"
+version = "1.0.0"
+description = "OkkiDrive"
+authors = ["OkkiDwi"]
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
