@@ -38,13 +38,27 @@ function Gamehub() {
         });
 
         let gamehubDiv = document.querySelector('.gamehub-container');
+        let libraryDiv = document.querySelectorAll('.launcher-container');
+        let settingsDiv = document.querySelectorAll('.settings-page');
+
         if (gamehubDiv) {
             let gamehubLinkText = document.querySelector('#link-gamehub');
             gamehubLinkText.style.backgroundColor = '#ffffff0d';
             gamehubLinkText.style.borderRadius = '5px';
         }
+
+        if (libraryDiv) {
+            let libraryLinkText = document.querySelector('#link-library');
+            libraryLinkText.style.backgroundColor = '';
+        }
+
+        if (settingsDiv) {
+            let gamehubLinkText = document.querySelector('#link-settings');
+            gamehubLinkText.style.backgroundColor = '';
+        }
     });
 
+    // Function to load settings from the JSON file, or create it if not present
     async function loadSettings() {
         const configDir = await appDataDir();
         const dirPath = `${configDir.replace(/\\/g, '/')}/fitgirlConfig`; // Directory path
@@ -53,12 +67,14 @@ function Gamehub() {
         try {
             console.log("Gamehub: Loading settings from:", settingsPath);
 
+            // Check if the directory exists, and if not, create it
             const dirExists = await exists(dirPath);
             if (!dirExists) {
                 await createDir(dirPath, { recursive: true });
                 console.log("Gamehub: Created directory:", dirPath);
             }
 
+            // Check if the settings file exists
             const fileExists = await exists(settingsPath);
             if (!fileExists) {
                 await writeTextFile(settingsPath, JSON.stringify(defaultSettings, null, 2));
@@ -68,6 +84,7 @@ function Gamehub() {
                 console.log("Gamehub: Settings file exists:", settingsPath);
             }
 
+            // If the file exists, read and parse it
             const json = await readTextFile(settingsPath);
             return JSON.parse(json);
         } catch (error) {
@@ -82,20 +99,6 @@ function Gamehub() {
         await clearFile(singularGamePath);
         invoke('stop_get_games_images');
     });
-
-    // Function to handle "View All" button clicks
-    function handleViewAll(section) {
-        if (section === 'popular-repacks') {
-            console.log("Redirecting to Popular Repacks catalog");
-            // Add your navigation or logic here
-        } else if (section === 'new-games') {
-            console.log("Redirecting to Newly Added Games catalog");
-            // Add your navigation or logic here
-        } else if (section === 'recently-updated') {
-            console.log("Redirecting to Recently Updated Games catalog");
-            // Add your navigation or logic here
-        }
-    }
 
     // Function to apply random image background
     async function randomImageFinder() {
@@ -112,6 +115,13 @@ function Gamehub() {
                 docBlurOverlay.remove();
             }
 
+            // const docColorFilterOverlay = document.querySelector('.color-blur-overlay');
+            // if (docColorFilterOverlay === null) {
+            //     const colorFilterOverlay = document.createElement('div');
+            //     colorFilterOverlay.className = 'color-blur-overlay';
+            //     fitgirlLauncher.appendChild(colorFilterOverlay);
+            // }
+
             const blurOverlay = document.createElement('div');
             blurOverlay.className = 'blur-overlay';
             fitgirlLauncher.appendChild(blurOverlay);
@@ -119,6 +129,23 @@ function Gamehub() {
             blurOverlay.style.backgroundImage = `url(${selectedImageSrc})`;
             blurOverlay.style.filter = 'blur(15px)';
             blurOverlay.style.top = `-${scrollPosition}px`;
+
+            try {
+
+                // let brightnessResult = await invoke('analyze_image_lightness', {imageUrl : selectedImageSrc} );
+                // if (brightnessResult === 'light') {
+                //     setBackgroundMainBrightness('light')
+                //     console.log("light")
+                // } else if (brightnessResult === 'dark') {
+                //     setBackgroundMainBrightness("dark")
+                //     console.log("dark")
+                // } else {
+                //     console.log("weird")
+                // }
+            } catch (error) {
+
+}
+
         }
     }
 
@@ -128,7 +155,7 @@ function Gamehub() {
         if (backgroundMainBrightness() === "dark") {
             title_category.forEach((el) => {
                 el.setAttribute("text-color-theme", "light");
-            })
+            });
             title_category_svg.forEach((el) => {
                 el.setAttribute("text-color-theme", "light");
             })
@@ -142,18 +169,25 @@ function Gamehub() {
         }
     })
 
+    // Effect to manage the random background based on background_image_path_64
     createEffect(() => {
+        console.log("Gamehub: Checking if background_image_path_64 is set...");
+
         if (!settings().background_image_path_64) {
+            console.log('Gamehub: No custom background image found. Running randomImageFinder.');
             try {
                 randomImageFinder();
-            } catch (error) {}
+            } catch (error) {
 
+            }
             const timeOut = setTimeout(() => {
                 const fitgirlLauncher = document.querySelector('.gamehub-container');
                 if (!fitgirlLauncher.querySelector('.blur-overlay')) {
-                    try {
-                        randomImageFinder();
-                    } catch (error) {}
+                try {
+                    randomImageFinder();
+                } catch (error) {
+
+                }
                 }
             }, 500);
 
@@ -162,46 +196,31 @@ function Gamehub() {
                 if (!fitgirlLauncher.querySelector('.blur-overlay')) {
                     try {
                         randomImageFinder();
-                    } catch (error) {}
+                    } catch (error) {
+                        
+                    }
                 }
             }, 5000);
 
+            // Cleanup when effect is re-run or component unmounted
             onCleanup(() => {
                 clearInterval(interval);
                 clearTimeout(timeOut);
             });
+        } else {
+            console.log('Gamehub: Custom background image found. Not applying random background.');
         }
     });
 
     return (
         <div className="gamehub-container">
             <div className="Popular-repacks">
-                <div className="section-header">
-                    <h2>Popular Repacks</h2>
-                    <button className="view-all-button" onClick={() => handleViewAll('popular-repacks')}>
-                        View All
-                    </button>
-                </div>
                 <Popularrepacks />
             </div>
-
             <div className="New-Games">
-                <div className="section-header">
-                    <h2>Newly Added Games</h2>
-                    <button className="view-all-button" onClick={() => handleViewAll('new-games')}>
-                        View All
-                    </button>
-                </div>
                 <Newgames />
             </div>
-
             <div className="Recently-Updated">
-                <div className="section-header">
-                    <h2>Recently Updated Games</h2>
-                    <button className="view-all-button" onClick={() => handleViewAll('recently-updated')}>
-                        View All
-                    </button>
-                </div>
                 <UpdatedGames />
             </div>
         </div>
