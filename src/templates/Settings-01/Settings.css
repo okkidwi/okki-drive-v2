@@ -165,7 +165,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 50px;
-  height: 8px;
+  height: 50px;
   color: whitesmoke;
   font-size: 20px;
   text-decoration: none;
@@ -204,10 +204,10 @@ body {
 .trakteer-btn,
 .saweria-btn {
   padding: 5px 5px;
-  width: 300px;
+  width: 600px;
   text-decoration: none;
   color: white;
-  border-radius: 16px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
@@ -243,7 +243,7 @@ body {
 /* Switch Styles */
 .switch {
   position: relative;
-  height: 8px; 
+  height: 1rem; 
   width: 2rem;  
   cursor: pointer;
   appearance: none;
