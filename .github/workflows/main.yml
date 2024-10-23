@@ -1,14 +1,14 @@
 name: 'publish'
 
 on:
-    workflow_dispatch:  # Manual trigger only
-#   push:
-#     branches:
-#       - master
-#     paths:
-#       - 'src/**'
-#       - 'src-tauri/**'
-      
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - 'src/**'
+#      - 'src-tauri/**'
+
 jobs:
   publish-tauri:
     permissions:
@@ -19,29 +19,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Cache node modules
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'npm' 
+          cache: 'npm'
 
+      # Install Rust with stable version
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      # Cache Rust dependencies
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
 
       - name: install frontend dependencies
-        run: npm install # change this to npm or pnpm depending on which one you use.
+        run: npm install # Adjust for npm or pnpm if needed
 
+      # Build and publish the Tauri app
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY : ${{  secrets.TAURI_PRIVATE_KEY }}
+          TAURI_PRIVATE_KEY : ${{ secrets.TAURI_PRIVATE_KEY }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces __VERSION__ with the app version.
+          tagName: app-v__VERSION__
           releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
