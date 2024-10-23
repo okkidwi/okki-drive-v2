@@ -14,8 +14,8 @@ function Sidebar() {
       <div className="sidebar-links">
         {/* Logo and title always first element. */}
         <div className="app-logo-title">
-          <img src="./Square310x310Logo.png" alt="fitgirl repack logo" id="fit-launcher-title-logo"></img>
-          <p id="fit-launcher-title">Fit Launcher</p>
+          <img src="./Square310x310Logo.png" alt="okki drive logo" id="okki-drive-title-logo"></img>
+          <p id="okki-drive-title">Okki Drive</p>
         </div>
         {/* Just below the app-logo-title */}
         <ul className="useful-links">
