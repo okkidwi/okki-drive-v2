@@ -88,6 +88,8 @@ async function saveSettings(settings) {
 
 const SettingsPage = () => {
     const [settings, setSettings] = createSignal(defaultSettings)
+    const { t, i18n } = useTranslation();
+    const [selectedLanguage, setSelectedLanguage] = createSignal(i18n.language);
     const [loading, setLoading] = createSignal(true)
     const [version, setVersion] = createSignal('')
     const [notificationVisible, setNotificationVisible] = createSignal(false)
@@ -320,10 +322,6 @@ const SettingsPage = () => {
         }
     }
 
-    
-const Settings = () => {
-  const { t, i18n } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = createSignal(i18n.language);
 
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language);
