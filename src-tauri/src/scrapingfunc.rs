@@ -391,7 +391,7 @@ pub mod basic_scraping {
             let mut file = match tokio::fs::File::open(&binding).await {
                 Ok(file) => file,
                 Err(e) => {
-                    eprintln!("Error opening the file: {:#?}", e);
+                    eprintln!("Kesalahan saat membuka file: {:#?}", e);
                     return Err(Box::new(ScrapingError::CreatingFileError {
                         source: e,
                         fn_name: "popular_games_scraping_func()".to_string(),
@@ -401,7 +401,7 @@ pub mod basic_scraping {
 
             let mut file_content = String::new();
             if let Err(e) = file.read_to_string(&mut file_content).await {
-                eprintln!("Error reading file content: {:#?}", e);
+                eprintln!("Terjadi kesalahan saat membaca konten file: {:#?}", e);
                 return Err(Box::new(ScrapingError::CreatingFileError {
                     source: e,
                     fn_name: "popular_games_scraping_func()".to_string(),
@@ -504,7 +504,7 @@ pub mod basic_scraping {
                 if let Some(elem) = long_image_elem {
                     elem.value().attr("src").unwrap_or_default()
                 } else {
-                    "Error, no image found!"
+                    "Kesalahan, tidak ada gambar yang ditemukan!"
                 }
             } else {
                 image_elem.value().attr("src").unwrap_or_default()
