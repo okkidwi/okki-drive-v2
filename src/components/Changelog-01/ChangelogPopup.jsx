@@ -27,87 +27,87 @@ const ChangelogPopup = () => {
       {isVisible() && (
         <div class="popup-container">
           <div class="changelog-content">
-            <h1>Changelog</h1>
-            <p class="subheading">Discover the latest features, improvements, and fixes.</p>
+            <h1>Catatan Perubahan</h1>
+            <p class="subheading">Temukan fitur, peningkatan, dan perbaikan terbaru.</p>
 
             <div class="changelog-item">
-              <div class="date">Oct 24, 2024 - v1.0.0</div>
+              <div class="date">24 Oktober 2024 - v1.1</div>
               <ul class="bullet-list">
-                <li><span class="label new">New Features:</span>
+                <li><span class="label new">Fitur Baru:</span>
                   <ul>
-                    <li>Added auto-updater functionality</li>
-                    <li>Introduced StopTorrent feature to delete downloaded files alongside stopping torrents</li>
-                    <li>Implemented a dropdown filter for game genres selection</li>
-                    <li>Designed a function in Rust to check image brightness, dynamically changing category titles based on brightness</li>
-                    <li>Added secrets to environment variables for better security</li>
-                    <li>Enhanced slider design with a new filtering icon allowing the user to filter games by genres</li>
-                    <li>Added better torrent configuration options in TOML format</li>
-                    <li>Added Peers Information part in vertical slide</li>
-                    <li>Added popup for Finished Game and Unexpected Resume Error</li>
-                    <li>Allowed user to restart torrent through vertical slide</li>
-                    <li>Overhauled Settings page with file picker, background image handling, and input path clearing</li>
-                    <li>Added changelog popup for displaying updates</li>
-                    <li>Implemented network error alerts</li>
-                    <li>Prepared for background image changes in future updates</li>
-                    <li>Started manual refresh feature for game content updates</li>
-                    <li>NSFW filter functionality</li>
-                    <li>Safe checker for JSON</li>
-                    <li>Hidden beta update option</li>
-                    <li>Confirmation notifications for settings</li>
-                    <li>Enhanced offline error handling</li>
+                        <li>Menambahkan fungsi pembaruan otomatis</li>
+                        <li>Memperkenalkan fitur StopTorrent untuk menghapus file yang diunduh bersamaan dengan menghentikan torrent</li>
+                        <li>Mengimplementasikan filter dropdown untuk pemilihan genre game</li>
+                        <li>Merancang fungsi dalam Rust untuk memeriksa kecerahan gambar, secara dinamis mengubah judul kategori berdasarkan kecerahan</li>
+                        <li>Menambahkan rahasia ke variabel lingkungan untuk keamanan yang lebih baik</li>
+                        <li>Meningkatkan desain slider dengan ikon penyaringan baru yang memungkinkan pengguna untuk menyaring game berdasarkan genre</li>
+                        <li>Menambahkan opsi konfigurasi torrent yang lebih baik dalam format TOML</li>
+                        <li>Menambahkan bagian Informasi Peers dalam slide vertikal</li>
+                        <li>Menambahkan popup untuk Game Selesai dan Kesalahan Resume yang Tidak Terduga</li>
+                        <li>Memungkinkan pengguna untuk memulai ulang torrent melalui slide vertikal</li>
+                        <li>Merombak halaman Pengaturan dengan pemilih file, penanganan gambar latar belakang, dan penghapusan jalur input</li>
+                        <li>Menambahkan popup changelog untuk menampilkan pembaruan</li>
+                        <li>Mengimplementasikan peringatan kesalahan jaringan</li>
+                        <li>Mempersiapkan perubahan gambar latar belakang di pembaruan mendatang</li>
+                        <li>Memulai fitur penyegaran manual untuk pembaruan konten game</li>
+                        <li>Fungsionalitas filter NSFW</li>
+                        <li>Pemeriksa aman untuk JSON</li>
+                        <li>Opsi pembaruan beta yang tersembunyi</li>
+                        <li>Notifikasi konfirmasi untuk pengaturan</li>
+                        <li>Meningkatkan penanganan kesalahan offline</li>
                   </ul>
                 </li>
-                <li><span class="label bugfix">Bug Fixes:</span>
+                <li><span class="label bugfix">Perbaikan Bug:</span>
                   <ul>
-                    <li>Fixed issue with stopping game from vertical slide without initializing the torrent.</li>
-                    <li>Fixed hardcoded sizing issues, especially for the sidebar</li>
-                    <li>Resolved clipping issues with long game titles that didn't fit properly</li>
-                    <li>Corrected Z-index overlap issues with the sidebar</li>
-                    <li>Fixed library reactivity to improve performance</li>
-                    <li>Addressed random box shadow inconsistencies across elements</li>
-                    <li>Fixed hovering issues for game images in the slider</li>
-                    <li>Improved CSS readability and functionality</li>
-                    <li>Improved social media icon hovering (Facebook & Telegram)</li>
-                    <li>Fixed sidebar useful-links navigation for better maintainability</li>
-                    <li>Fixed path replacing issues</li>
-                    <li>Corrected search bar type for better input validation</li>
-                    <li>Fixed quick avoidable errors with `?`</li>
-                    <li>Fixed AppCache issue in JSX</li>
-                    <li>Fixed AppDir and AppConfig compatibility (Unix-Based OS and Windows)</li>
-                    <li>Automation setup issues resolved</li>
-                    <li>Improved tag scanning accuracy</li>
-                    <li>Image display issues fixed for popular repacks</li>
-                    <li>Corrected persistence and file recognition problems</li>
-                    <li>Fixed 0MB/s display issue</li>
+                        <li>Memperbaiki masalah dengan menghentikan game dari slide vertikal tanpa menginisialisasi torrent.</li>
+                        <li>Memperbaiki masalah ukuran yang dikodekan keras, terutama untuk sidebar</li>
+                        <li>Menyelesaikan masalah pemotongan dengan judul game panjang yang tidak pas</li>
+                        <li>Mengoreksi masalah tumpang tindih Z-index dengan sidebar</li>
+                        <li>Memperbaiki reaktivitas perpustakaan untuk meningkatkan kinerja</li>
+                        <li>Menangani inkonsistensi bayangan kotak acak di seluruh elemen</li>
+                        <li>Memperbaiki masalah hover untuk gambar game di slider</li>
+                        <li>Meningkatkan keterbacaan dan fungsionalitas CSS</li>
+                        <li>Meningkatkan hover ikon media sosial (Facebook & Telegram)</li>
+                        <li>Memperbaiki navigasi tautan berguna sidebar untuk pemeliharaan yang lebih baik</li>
+                        <li>Memperbaiki masalah penggantian jalur</li>
+                        <li>Mengoreksi tipe bilah pencarian untuk validasi input yang lebih baik</li>
+                        <li>Memperbaiki kesalahan yang dapat dihindari dengan `?`</li>
+                        <li>Memperbaiki masalah AppCache di JSX</li>
+                        <li>Memperbaiki kompatibilitas AppDir dan AppConfig (Unix-Based OS dan Windows)</li>
+                        <li>Masalah pengaturan otomatisasi teratasi</li>
+                        <li>Meningkatkan akurasi pemindaian tag</li>
+                        <li>Masalah tampilan gambar diperbaiki untuk repack populer</li>
+                        <li>Mengoreksi masalah ketahanan dan pengenalan file</li>
+                        <li>Memperbaiki masalah tampilan 0MB/s</li>
                   </ul>
                 </li>
-                <li><span class="label improvement">Improvements:</span>
+                <li><span class="label improvement">Peningkatan:</span>
                   <ul>
-                    <li>Removed most event listeners for better optimization</li>
-                    <li>Made reload quicker to prevent issues from users spamming the "Save Settings" button</li>
-                    <li>Replaced regular checkboxes with switches for a more modern look and fixed the settings design</li>
-                    <li>Hid the sidebar scrollbar for a cleaner design</li>
-                    <li>Improved download progress bar with better icon alignment</li>
-                    <li>Unified the app's icon set to Lucid Icons for a consistent appearance</li>
-                    <li>Enforced NPM fontsource usage for fonts, prohibiting direct changes to the app’s font-family</li>
-                    <li>Reorganized slider CSS into a dedicated file for better maintainability</li>
-                    <li>Optimized UI automation and improved logic for smoother interactions</li>
-                    <li>Increased scraping speed by approximately 70% for faster image fetching</li>
-                    <li>Compressed requests with Brotli, Gzip, or Deflate</li>
-                    <li>Started migration to Stores instead of localStorage</li>
-                    <li>Added store `restartTorrentInfo`</li>
-                    <li>Enhanced HTML readability</li>
-                    <li>Spacing adjustments on changelog</li>
-                    <li>Deprecation of localStorage usage</li>
-                    <li>Increased logging during scraping and network tasks for better debugging</li>
-                    <li>Prepared codebase for UI component updates without full window reloads</li>
-                    <li>Optimized code for better maintainability and performance</li>
-                    <li>Added Clippy usage for cleaner code</li>
-                    <li>Upgraded to librqbit 7.0.1</li>
-                    <li>Added asynchronous functions for better performance</li>
-                    <li>Logging and CTG (Currently Torrenting Game) feature</li>
-                    <li>Improved event handling and DHT persistence</li>
-                    <li>Safe checker for JSON</li>
+                        <li>Menghapus sebagian besar pendengar acara untuk optimisasi yang lebih baik</li>
+                        <li>Membuat muat ulang lebih cepat untuk mencegah masalah dari pengguna yang mengklik tombol "Simpan Pengaturan" terlalu sering</li>
+                        <li>Mengganti kotak centang biasa dengan saklar untuk tampilan yang lebih modern dan memperbaiki desain pengaturan</li>
+                        <li>Menyembunyikan gulir sidebar untuk desain yang lebih bersih</li>
+                        <li>Meningkatkan bilah kemajuan unduhan dengan penataan ikon yang lebih baik</li>
+                        <li>Menyatukan set ikon aplikasi menjadi Lucid Icons untuk penampilan yang konsisten</li>
+                        <li>Menegakkan penggunaan fontsource NPM untuk font, melarang perubahan langsung pada font-family aplikasi</li>
+                        <li>Mengatur ulang CSS slider ke file khusus untuk pemeliharaan yang lebih baik</li>
+                        <li>Mengoptimalkan otomatisasi UI dan meningkatkan logika untuk interaksi yang lebih lancar</li>
+                        <li>Meningkatkan kecepatan pemindaian sekitar 70% untuk pengambilan gambar yang lebih cepat</li>
+                        <li>Mengompresi permintaan dengan Brotli, Gzip, atau Deflate</li>
+                        <li>Memulai migrasi ke Stores sebagai pengganti localStorage</li>
+                        <li>Menambahkan penyimpanan `restartTorrentInfo`</li>
+                        <li>Meningkatkan keterbacaan HTML</li>
+                        <li>Penyesuaian spasi pada changelog</li>
+                        <li>Menghentikan penggunaan localStorage</li>
+                        <li>Meningkatkan logging selama pemindaian dan tugas jaringan untuk debugging yang lebih baik</li>
+                        <li>Mempersiapkan basis kode untuk pembaruan komponen UI tanpa memuat ulang jendela sepenuhnya</li>
+                        <li>Mengoptimalkan kode untuk pemeliharaan dan kinerja yang lebih baik</li>
+                        <li>Menambahkan penggunaan Clippy untuk kode yang lebih bersih</li>
+                        <li>Mengupgrade ke librqbit 7.0.1</li>
+                        <li>Menambahkan fungsi asinkron untuk kinerja yang lebih baik</li>
+                        <li>Fitur logging dan CTG (Game Torrenting Saat Ini)</li>
+                        <li>Meningkatkan penanganan acara dan ketahanan DHT</li>
+                        <li>Pemeriksa aman untuk JSON</li>
                   </ul>
                 </li>
               </ul>
@@ -121,11 +121,11 @@ const ChangelogPopup = () => {
                   checked={isHidden()} 
                   onChange={handleCheckboxChange} 
                 />
-                Don't show again
+                Jangan tampilkan lagi
               </label>
             </div>
 
-            <button class="close-btn" onClick={handleClose}>Close</button>
+            <button class="close-btn" onClick={handleClose}>Tutup</button>
           </div>
         </div>
       )}
