@@ -31,7 +31,7 @@ async function parseNewGameData() {
         console.log(filteredGameData)
         return filteredGameData
     } catch (error) {
-        console.error('Error parsing game data:', error)
+        console.error('Kesalahan saat mengurai data game:', error)
         throw error
     }
 }
@@ -57,7 +57,7 @@ function Popularrepacks() {
     const [sliderComponent, setSliderComponent] = createSignal(null) // Hold slider component
 
     onMount(async () => {
-        console.log('Popularrepacks component mounted')
+        console.log('Komponen repack populer dipasang')
         try {
             const data = await parseNewGameData()
             setImagesObject(data)
@@ -119,7 +119,7 @@ function Popularrepacks() {
             setFilteredImages(data)
         } catch (error) {
             // Handle error if needed
-            console.error('Error during component mount:', error)
+            console.error('Kesalahan saat pemasangan komponen:', error)
         }
     })
 
@@ -172,7 +172,7 @@ function Popularrepacks() {
     return (
         <>
             <div className="title-category poprepacks">
-                <h2>Popular Repacks</h2>
+                <h2>Repack Populer</h2>
                 <div className="filter-box">
                     <details
                         className="filter-details poprepacks"
