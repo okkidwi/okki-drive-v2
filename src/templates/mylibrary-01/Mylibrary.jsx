@@ -532,7 +532,7 @@ function Mylibrary() {
                         zIndex: "1010"
                     }}
                 >
-                    <div class="context-menu-item" onClick={handleRemoveGame}>Remove Game</div>
+                    <div class="context-menu-item" onClick={handleRemoveGame}>Hapus Game</div>
                 </div>
             )}
         </>
