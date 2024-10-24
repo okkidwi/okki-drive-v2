@@ -239,7 +239,7 @@ display:none;
   .button::before {
     position: absolute;
     bottom: -20px;
-    content: "Import Game";
+    content: "Impor Game";
     color: white;
     transition-duration: .3s;
     font-size: 1px;
