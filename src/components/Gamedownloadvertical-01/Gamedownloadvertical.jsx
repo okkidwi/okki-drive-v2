@@ -330,7 +330,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, hapus saja!',
-                cancelButtonText: 'Batal',
+                cancelButtonText: 'Batalkan',
                 didRender: () => {
                     if (hash) {
                         // Add event listener for the custom "Delete Files" button
