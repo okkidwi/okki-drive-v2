@@ -31,7 +31,7 @@ const ChangelogPopup = () => {
             <p class="subheading">Temukan fitur, peningkatan, dan perbaikan terbaru.</p>
 
             <div class="changelog-item">
-              <div class="date">24 Oktober 2024 - v1.1</div>
+              <div class="date">24 Oktober 2024 - v1.1.0</div>
               <ul class="bullet-list">
                 <li><span class="label new">Fitur Baru:</span>
                   <ul>
