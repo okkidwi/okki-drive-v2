@@ -56,13 +56,13 @@ class TorrentManager {
     if (this.client) {
       this.client.destroy(err => {
         if (err) {
-          console.error('Error stopping the torrent client:', err);
+          console.error('Kesalahan saat menghentikan klien torrent:', err);
         } else {
-          console.log('Torrent client stopped successfully.');
+          console.log('Klien torrent berhasil dihentikan.');
         }
       });
     } else {
-      console.log('No active torrent client to stop.');
+      console.log('Tidak ada klien torrent aktif yang harus dihentikan.');
     }
   }
 }
