@@ -80,7 +80,7 @@ async function saveSettings(settings) {
         await writeTextFile(settingsPath, JSON.stringify(settings, null, 2))
         return true
     } catch (error) {
-        console.error('Failed to save settings:', error)
+        console.error('Gagal menyimpan pengaturan:', error)
         return false
     }
 }
@@ -133,7 +133,7 @@ const SettingsPage = () => {
             const appVersionValue = await getVersion()
             setVersion(appVersionValue)
         } catch (error) {
-            console.error('Error during initialization:', error)
+            console.error('Kesalahan selama inisialisasi:', error)
         } finally {
             setLoading(false)
         }
@@ -143,7 +143,7 @@ const SettingsPage = () => {
     const handleSave = async () => {
         const success = await saveSettings(settings())
         if (success) {
-            setNotificationMessage('Settings saved successfully!')
+            setNotificationMessage('Pengaturan berhasil disimpan!')
             setNotificationVisible(true) // Show notification
             setTimeout(() => {
                 setNotificationVisible(false) // Hide notification after 3 seconds
@@ -171,7 +171,7 @@ const SettingsPage = () => {
                 await saveSettings(newSettings)
             }
         } catch (error) {
-            console.error('Settings: Failed to select download path:', error)
+            console.error('Pengaturan: Gagal memilih jalur unduhan:', error)
         }
     }
 
@@ -206,7 +206,7 @@ const SettingsPage = () => {
                 await saveSettings(newSettings)
             }
         } catch (error) {
-            console.error('Settings: Unable to select import path: ', error)
+            console.error('Pengaturan: Tidak dapat memilih jalur impor: ', error)
         }
     }
 
@@ -228,7 +228,7 @@ const SettingsPage = () => {
                 multiple: false,
                 filters: [
                     {
-                        name: 'Image',
+                        name: 'Gambar',
                         extensions: ['png', 'jpeg', 'jpg'],
                     },
                 ],
@@ -263,7 +263,7 @@ const SettingsPage = () => {
                 await saveSettings(newSettings)
 
                 // Notify the user that the background is being applied
-                setNotificationMessage('Applying background, please wait...')
+                setNotificationMessage('Menerapkan latar belakang, harap tunggu...')
                 setNotificationVisible(true)
 
                 // Delay the reload slightly to allow the notification to appear (Not 1.5sec, too long, the user will click on save settings again and it will break)
@@ -273,7 +273,7 @@ const SettingsPage = () => {
             }
         } catch (error) {
             console.error(
-                'Settings: There was an issue selecting the background image:',
+                'Pengaturan: Terjadi masalah saat memilih gambar latar belakang:',
                 error
             )
         }
@@ -295,7 +295,7 @@ const SettingsPage = () => {
         await saveSettings(newSettings)
         setSettings(newSettings)
         // Notify the user that the background is being removed
-        setNotificationMessage('Removing background, please wait...')
+        setNotificationMessage('Menghapus latar belakang, harap tunggu...')
         setNotificationVisible(true)
         
         // Delay the reload slightly to allow the notification to appear
@@ -312,16 +312,16 @@ const SettingsPage = () => {
             if (shouldUpdate) {
                 await installUpdate()
             } else {
-                alert('You are already on the latest version.')
+                alert('Anda sudah menggunakan versi terbaru.')
             }
         } catch (error) {
-            alert('Failed to check for updates.')
+            alert('Gagal memeriksa pembaruan.')
         }
     }
 
     return (
         <div class="settings-page">
-            <h1>Settings</h1>
+            <h1>Pengaturan</h1>
 
             {/* Notification box */}
             {notificationVisible() && (
@@ -335,7 +335,7 @@ const SettingsPage = () => {
             )}
             {/* Installation Settings start*/}
             <section>
-                <h2>Installation Settings</h2>
+                <h2>Pengaturan Instalasi</h2>
                 <div class="form-group">
                     <label>
                         <input
@@ -349,9 +349,9 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Automatic installation of games. (This will
-                        automatically start the installation process after
-                        downloading the game)
+                        Instalasi game secara otomatis. (Ini akan
+                        memulai proses instalasi secara otomatis setelah
+                        mengunduh game)
                     </label>
                 </div>
                 <div class="form-group">
@@ -367,8 +367,8 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Auto-clean game files after installation.{' '}
-                        <strong>//Not working//</strong>
+                        Bersihkan file game secara otomatis setelah instalasi.{' '}
+                        <strong>//Tidak bekerja//</strong>
                     </label>
                 </div>
                 <div class="form-group">
@@ -384,8 +384,8 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Show hover title on game icons (useful for long game
-                        names).
+                        Tampilkan judul hover pada ikon game (berguna untuk
+                        nama game yang panjang).
                     </label>
                 </div>
                 <div class="form-group">
@@ -401,8 +401,8 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Limit the installer to 2GB of RAM. (It will be
-                        automatically on if you have 8GB or less)
+                        Batasi penginstal hingga 2GB RAM. (Akan aktif
+                        secara otomatis jika Anda memiliki 8GB atau kurang)
                     </label>
                 </div>
                 <div class="form-group">
@@ -418,8 +418,8 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Hide NSFW content. (This will hide all NSFW content from
-                        the launcher)
+                        Sembunyikan konten NSFW. (Ini akan menyembunyikan semua
+                        konten NSFW dari peluncur)
                     </label>
                 </div>
             </section>
@@ -427,18 +427,18 @@ const SettingsPage = () => {
 
             {/* Download Settings */}
             <section>
-                <h2>Download Settings</h2>
+                <h2>Pengaturan Unduhan</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button class="upload-btn" onClick={selectDownloadPath}>
-                            Choose Download Path
+                            Pilih Jalur Unduhan
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedDownloadPath()
                                 ? selectedDownloadPath()
-                                : 'No download path selected'}
+                                : 'Tidak ada jalur unduhan yang dipilih'}
                         </p>
                         {selectedDownloadPath() && (
                             <button
@@ -454,18 +454,18 @@ const SettingsPage = () => {
 
             {/* Import Settings */}
             <section>
-                <h2>Import Settings</h2>
+                <h2>Pengaturan Impor</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button class="upload-btn" onClick={selectImportPath}>
-                            Choose Import File
+                            Pilih Impor File
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedImportPath()
                                 ? selectedImportPath()
-                                : 'No import path selected'}
+                                : 'Tidak ada jalur impor yang dipilih'}
                         </p>
                         {selectedImportPath() && (
                             <button class="clear-btn" onClick={clearImportPath}>
@@ -478,21 +478,21 @@ const SettingsPage = () => {
 
             {/* Background Image Settings */}
             <section>
-                <h2>Background Image</h2>
+                <h2>Gambar Latar Belakang</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button
                             class="upload-btn"
                             onClick={selectBackgroundImage}
                         >
-                            Select Background Image
+                            Pilih Gambar Latar Belakang
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedBackgroundImagePath()
                                 ? selectedBackgroundImagePath()
-                                : 'No background image selected'}
+                                : 'Tidak ada gambar latar belakang yang dipilih'}
                         </p>
                         {selectedBackgroundImagePath() && (
                             <button
@@ -508,23 +508,23 @@ const SettingsPage = () => {
 
             {/* Okki Drive Information */}
             <section>
-                <h2>Okki Drive Information</h2>
+                <h2>Informasi Okki Drive</h2>
                 <div class="form-group">
-                    <p>Application Version: {version()}</p>
+                    <p>Versi Aplikasi: {version()}</p>
                 </div>
                 <div class="form-group">
                     <button 
                         class="check-update-btn"
                         onClick={handleCheckForUpdates}
                         >
-                        Check for Updates
+                        Periksa Pembaruan
                     </button>
                 </div>
             </section>
 
             {/* Social Links */}
             <section class="social-links">
-                <h2>Follow Us</h2>
+                <h2>Ikuti Kami</h2>
                 <div class="card">
                     <a
                         class="social-link1"
@@ -568,19 +568,19 @@ const SettingsPage = () => {
 
             {/* Donation Buttons */}
             <section class="donation-links">
-                <h2>Support Us</h2>
+                <h2>Dukung Kami</h2>
                 <div class="card donation-buttons">
                     <a class="donation-btn trakteer-btn" href="https://trakteer.id/okkidwi/tip" target="_blank">
-                        Donate via Trakteer
+                        Donasi melalui Trakteer
                     </a>
                     <a class="donation-btn saweria-btn" href="https://saweria.co/okkidwi" target="_blank">
-                        Donate via Saweria
+                        Donasi melalui Saweria
                     </a>
                 </div>
             </section>
 
                 <button class="boton-elegante" style={"width: fit-content;"} onClick={handleSave}>
-                    Save Settings
+                    Simpan Pengaturan
                 </button>
 
             </section>
