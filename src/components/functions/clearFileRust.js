@@ -5,7 +5,7 @@ async function clearFile(filePath) {
         await invoke('clear_file', { filePath });
         return;
     } catch (error) {
-        console.error('Error reading file:', error);
+        console.error('Terjadi kesalahan saat membaca file:', error);
     }
 }
 
