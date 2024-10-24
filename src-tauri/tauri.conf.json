@@ -12,7 +12,7 @@
     "tauri": {
         "bundle": {
             "active": true,
-            "targets": ["updater", "msi"],
+            "targets": ["updater", "msi", "portable"],
             "windows": {
                 "webviewInstallMode": {
                     "type": "downloadBootstrapper"
