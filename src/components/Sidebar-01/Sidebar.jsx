@@ -27,7 +27,7 @@ function Sidebar() {
                   <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
 
-                <p class="links-texts">Home</p>
+                <p class="links-texts">Beranda</p>
             </li>
         </A>
           
@@ -43,7 +43,7 @@ function Sidebar() {
                       <rect width="7" height="7" x="3" y="14" rx="1"/>
                     </svg>
 
-                    <p className="links-texts">My Library</p>
+                    <p className="links-texts">Library</p>
             </li>
         </A>
 
@@ -55,7 +55,7 @@ function Sidebar() {
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16"/>
                   <circle cx="12" cy="12" r="4"/>
                 </svg>
-                <p className="links-texts" >Settings </p>
+                <p className="links-texts" >Pengaturan </p>
                 {/* {translate('settings_placeholder', {})} */}
                 </li>
 
@@ -67,7 +67,7 @@ function Sidebar() {
       <div className="sidebar-games">
         <p className="sidebar-heading"></p>
         <span className="sidebar-heading-text">
-          <br type="text" />RECENTLY DOWNLOADED GAMES<br/>
+          <br type="text" />GAME YANG BARU DIUNDUH<br/>
           {/* {translate('recently_downloaded_games_placeholder', {})} */}
         </span>
 
@@ -78,7 +78,7 @@ function Sidebar() {
       <div className="sidebar-downloading-game">
         <p className="sidebar-heading">
           <span className="sidebar-heading-text">
-            <br/>DOWNLOADING GAMES<br/>
+            <br/>MENGUNDUH GAME<br/>
             {/* {translate('downloading_games_placeholder', {})} */}
           </span>
         </p>
