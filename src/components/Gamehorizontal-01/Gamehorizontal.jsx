@@ -495,13 +495,13 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
             return { repackDescription: 'Deskripsi tidak tersedia', officialDescription: 'Deskripsi tidak tersedia' };
         }
 
-        const repackIndex = description.indexOf('Fitur Repack');
-        const gameDescriptionIndex = description.indexOf('\nDeskripsi Game\n');
+        const repackIndex = description.indexOf('Repack Features');
+        const gameDescriptionIndex = description.indexOf('\nGame Description\n');
 
         if (repackIndex !== -1 && gameDescriptionIndex !== -1) {
 
             const repackDescription = description.substring(repackIndex, gameDescriptionIndex).trim();
-            const officialDescription = description.substring(gameDescriptionIndex + '\nDeskripsi Game\n'.length).trim();
+            const officialDescription = description.substring(gameDescriptionIndex + '\nGame Description\n'.length).trim();
             return { repackDescription, officialDescription };
 
         } else {
@@ -510,21 +510,21 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
     }
 
     function extractDetails(description) {
-        let genresTagsMatch = description.match(/Genre\/Tag:\s*([^\n]+)/);
-        let companiesMatch = description.match(/Perusahaan:\s*([^\n]+)/);
+        let genresTagsMatch = description.match(/Genres\/Tags:\s*([^\n]+)/);
+        let companiesMatch = description.match(/Company:\s*([^\n]+)/);
         if (companiesMatch === null) {
-            companiesMatch = description.match(/Perusahaan:\s*([^\n]+)/);
+            companiesMatch = description.match(/Companies:\s*([^\n]+)/);
         }
-        const languageMatch = description.match(/Bahasa:\s*([^\n]+)/);
-        const originalSizeMatch = description.match(/Ukuran Asli:\s*([^\n]+)/);
-        const repackSizeMatch = description.match(/Ukuran Repack:\s*([^\n]+)/);
+        const languageMatch = description.match(/Languages:\s*([^\n]+)/);
+        const originalSizeMatch = description.match(/Original Size:\s*([^\n]+)/);
+        const repackSizeMatch = description.match(/Repack Size:\s*([^\n]+)/);
 
         return {
-            'Genre/Tags:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
-            Companies: companiesMatch ? companiesMatch[1].trim() : 'N/A',
-            Language: languageMatch ? languageMatch[1].trim() : 'N/A',
-            OriginalSize: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
-            RepackSize: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
+            'Genre/Tag:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
+            Perusahaan: companiesMatch ? companiesMatch[1].trim() : 'N/A',
+            Bahasa: languageMatch ? languageMatch[1].trim() : 'N/A',
+            UkuranAsli: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
+            UkuranRepack: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
         };
     }
 
