@@ -20,7 +20,7 @@ function scrollEffect(selectedLeftButton, selectedRightButton, targetContainer) 
             container.scrollLeft -= 150; // Adjusted for left scrolling
         });
     } else {
-        console.error("Error: Left or right button not found.");
+        console.error("Kesalahan: Tombol kiri atau kanan tidak ditemukan.");
     }
 }
 export default scrollEffect;
