@@ -165,7 +165,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                 title: 'Dimana Anda ingin mengunduh game ini??',
                 icon: 'question',
                 html: 
-                    `<input type="text" id="gamePathInput" class="swal2-input" placeholder="Game Path">
+                    `<input type="text" id="gamePathInput" class="swal2-input" placeholder="Jalur Game">
                      <button id="selectPathButton" class="swal2-confirm swal2-styled">Pilih Jalur</button>`,
                 showCancelButton: true,
                 confirmButtonText: 'Unduh!',
@@ -265,7 +265,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             `;
                             
                             const { value: selectedFiles } = await Swal.fire({
-                                title: "Select Files to Download",
+                                title: "Pilih File untuk Diunduh",
                                 html: 
                                     `<form id="fileSelectionForm">
                                         ${externalCheckboxesHtml}
