@@ -66,7 +66,7 @@ function Searchbar() {
                         postURLs.push(loc);
                     }
                 } else {
-                    console.error('Failed to fetch sitemap:', response.statusText);
+                    console.error('Gagal mengambil sitemap:', response.statusText);
                 }
             }
 
@@ -77,7 +77,7 @@ function Searchbar() {
 
             setSearchResults(results.slice(0, 5));
         } catch (error) {
-            console.error('Failed to fetch sitemap data:', error);
+            console.error('Gagal mengambil data sitemap:', error);
         }
     }
 
@@ -179,7 +179,7 @@ function Searchbar() {
                 <input 
                     id='searchbar-input' 
                     type="text" 
-                    placeholder= "Search here..."
+                    placeholder= "Cari di sini..."
                     onInput={handleInputChange} 
                     value={searchTerm()} // Ensure the input value is controlled
                 />
