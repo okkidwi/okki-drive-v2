@@ -49,7 +49,7 @@ function Downloadingpartsidebar() {
             window.location.reload();
     
         } catch (error) {
-            console.error('Error stopping torrent:', error);
+            console.error('Kesalahan saat menghentikan torrent:', error);
         }
     };
     
@@ -76,15 +76,15 @@ function Downloadingpartsidebar() {
             if (state.finished) {
                 setIsTorrentDone(true);
                 clearInterval(fetchIntervalId); // Stop fetching when torrent is done
-                console.log('Torrent completed, stopping interval.');
-                console.log("Starting the Automated Process Setup Install");
+                console.log('Torrent selesai, interval berhenti.');
+                console.log("Memulai Pengaturan Proses Otomatis Instal");
                 await invoke('api_automate_setup_install', globalTorrentInfo)
-                console.log("Started the Automated Process Setup Install");
+                console.log("Memulai Pengaturan Proses Otomatis Instal");
             }
         } catch (error) {
-            console.error('Error fetching torrent state:', error);
+            console.error('Terjadi kesalahan saat mengambil status torrent:', error);
             
-            if (error.message === 'Fetching of torrent stats has been stopped.') {
+            if (error.message === 'Pengambilan statistik torrent telah dihentikan.') {
                 shouldStopFetching = true;
                 clearInterval(fetchIntervalId); // Stop interval in case of error
             }
@@ -141,7 +141,7 @@ function Downloadingpartsidebar() {
                         existingData = JSON.parse(fileContent);
                     } catch (readError) {
                         // If file doesn't exist, create it with an empty array
-                        console.log('File does not exist, creating a new one.');
+                        console.log('File tidak ada, membuat yang baru.');
                         await writeFile(filePath, JSON.stringify([]));
                         existingData = [];
                     }
@@ -158,14 +158,14 @@ function Downloadingpartsidebar() {
                     console.log("checked and it is: ", gameExists);
                     if (!gameExists) {
                         existingData.push(gameData);
-                        console.log('Writing updated data to path:', filePath);
+                        console.log('Menulis data yang diperbarui ke jalur:', filePath);
                         await writeFile(filePath, JSON.stringify(existingData, null, 2)); // Beautify JSON with 2 spaces indentation
-                        console.log('Game data saved successfully:', gameData);
+                        console.log('Data game berhasil disimpan:', gameData);
                     } else {
-                        console.log('Game already exists in the file, not adding again:', gameData);
+                        console.log('Game sudah ada di dalam file, tidak perlu ditambahkan lagi:', gameData);
                     }
                 } catch (error) {
-                    console.error('Error saving game data:', error);
+                    console.error('Terjadi kesalahan saat menyimpan data game:', error);
                 }
             }
             
@@ -192,7 +192,7 @@ function Downloadingpartsidebar() {
 
             if (torrentInfo()?.state === 'initializing') {
                 setIsInitializing(true);
-                setDownloadingSpeed('Initializing...');
+                setDownloadingSpeed('Inisialisasi...');
                 setRemainingTime('');
             } else {
                 setIsInitializing(false)
@@ -281,7 +281,7 @@ function Downloadingpartsidebar() {
     })
 
     createEffect(() => {
-        console.log(`Is Initializing: ${isInitializing()}`);
+        console.log(`Sedang melakukan inisialisasi: ${isInitializing()}`);
     });
 
     return (
@@ -293,7 +293,7 @@ function Downloadingpartsidebar() {
                 <>
                 <div className="current-image-container">
 
-                    <img className="current-image" src={gameObjectProduced().gameImage} alt="Game Image"></img>
+                    <img className="current-image" src={gameObjectProduced().gameImage} alt="Gambar Game"></img>
                     
                     {/* My heart told me to write weird-circle but my brain force me to write action-circle :( */}
                     <div className="action-circle">
@@ -337,7 +337,7 @@ function Downloadingpartsidebar() {
                 <>
                     <div className="current-image-container">
 
-                        <img className="current-image" src={currentImage()} alt="Game Image"></img>
+                        <img className="current-image" src={currentImage()} alt="Gambar Game"></img>
                         
                         <div className="action-circle">
                             <div className="action-circle-logo">
@@ -379,7 +379,7 @@ function Downloadingpartsidebar() {
                     </div>
                 </>
             ) : (
-                <p>No active downloads</p>
+                <p>Tidak ada unduhan aktif</p>
             )
                 }
 
