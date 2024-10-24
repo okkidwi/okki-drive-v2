@@ -50,9 +50,9 @@ function RefreshContent() {
       {/* Conditionally render the cookies card based on isDialogOpen */}
       {isDialogOpen() && (
         <div class="cookies-card">
-          <p class="cookie-heading">Refresh game content?</p>
+          <p class="cookie-heading">Segarkan konten game?</p>
           <p class="cookie-para">
-            By refreshing the content, you will be able to see the latest games and updates. Do you want to proceed?
+            Dengan menyegarkan konten, Anda akan dapat melihat game dan pembaruan terkini. Apakah Anda ingin melanjutkan??
           </p>
           <div class="button-wrapper">
             <button class="accept cookie-button" onClick={refreshContent}>Yes</button>
