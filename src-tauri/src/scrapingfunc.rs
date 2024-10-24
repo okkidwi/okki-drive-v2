@@ -28,16 +28,16 @@ pub mod basic_scraping {
 
     #[derive(Debug, thiserror::Error)]
     pub enum ScrapingError {
-        #[error("Request Error: {0}")]
+        #[error("Permintaan Kesalahan: {0}")]
         ReqwestError(#[from] reqwest::Error),
 
-        #[error("Selector Parsing Error: {0}")]
+        #[error("Kesalahan Penguraian Pemilih: {0}")]
         SelectorError(String),
 
-        #[error("Modifying JSON Error: {0}")]
+        #[error("Kesalahan Modifikasi JSON: {0}")]
         FileJSONError(#[from] serde_json::Error),
 
-        #[error("Creating File Error in `{fn_name}`: {source}")]
+        #[error("Membuat Kesalahan File di `{fn_name}`: {source}")]
         CreatingFileError {
             source: std::io::Error,
             fn_name: String,
@@ -60,7 +60,7 @@ pub mod basic_scraping {
         let mut binding = app_handle
             .path_resolver()
             .app_data_dir()
-            .ok_or("Failed to resolve app data directory")?;
+            .ok_or("Gagal menyelesaikan direktori data aplikasi")?;
         binding.push("sitemaps");
 
         if !binding.exists() {
@@ -93,17 +93,17 @@ pub mod basic_scraping {
             );
 
             let res = client.get(&url).send().await.map_err(|e| {
-                eprintln!("Failed to get a response from URL: {}", &url);
+                eprintln!("Gagal mendapat respons dari URL: {}", &url);
                 ScrapingError::ReqwestError(e)
             })?;
 
             if !res.status().is_success() {
-                eprintln!("Error: Failed to connect to the website or the website is down.");
+                eprintln!("Kesalahan: Gagal tersambung ke situs web atau situs web sedang tidak aktif.");
                 return Ok(());
             }
 
             let body = res.text().await.map_err(|e| {
-                eprintln!("Failed to get a body from URL: {}", &url);
+                eprintln!("Gagal mendapatkan isi dari URL: {}", &url);
                 ScrapingError::ReqwestError(e)
             })?;
 
@@ -137,30 +137,30 @@ pub mod basic_scraping {
             let document = scraper::Html::parse_document(&body);
 
             let titles_selector = scraper::Selector::parse(".entry-title a").map_err(|err| {
-                eprintln!("Error parsing titles selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih judul: {:#?}", err);
                 ScrapingError::SelectorError(err.to_string())
             })?;
 
             let pics_selector = scraper::Selector::parse(".alignleft").map_err(|err| {
-                eprintln!("Error parsing images selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih gambar: {:#?}", err);
 
                 ScrapingError::SelectorError(err.to_string())
             })?;
 
             let desc_selector = scraper::Selector::parse("div.entry-content").map_err(|err| {
-                eprintln!("Error parsing description selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih deskripsi: {:#?}", err);
                 ScrapingError::SelectorError(err.to_string())
             })?;
 
             let hreflink_selector =
                 scraper::Selector::parse(".entry-title > a").map_err(|err| {
-                    eprintln!("Error parsing hreflink selector: {:#?}", err);
+                    eprintln!("Terjadi kesalahan saat mengurai pemilih hreflink: {:#?}", err);
                     ScrapingError::SelectorError(err.to_string())
                 })?;
 
             let tag_selector = scraper::Selector::parse(".entry-content p strong:first-of-type")
                 .map_err(|err| {
-                    eprintln!("Error parsing tag selector: {:#?}", err);
+                    eprintln!("Terjadi kesalahan saat mengurai pemilih tag: {:#?}", err);
                     ScrapingError::SelectorError(err.to_string())
                 })?;
 
@@ -224,7 +224,7 @@ pub mod basic_scraping {
             let mut file = match tokio::fs::File::open(&binding).await {
                 Ok(file) => file,
                 Err(e) => {
-                    eprintln!("Error opening the file: {:#?}", e);
+                    eprintln!("Terjadi kesalahan saat membuka FILE: {:#?}", e);
                     return Err(Box::new(ScrapingError::CreatingFileError {
                         source: e,
                         fn_name: "scraping_func()".to_string(),
@@ -234,7 +234,7 @@ pub mod basic_scraping {
 
             let mut file_content = String::new();
             if let Err(e) = file.read_to_string(&mut file_content).await {
-                eprintln!("Error reading file content: {:#?}", e);
+                eprintln!("Terjadi kesalahan saat membaca konten file: {:#?}", e);
                 return Err(Box::new(ScrapingError::CreatingFileError {
                     source: e,
                     fn_name: "scraping_func()".to_string(),
@@ -244,7 +244,7 @@ pub mod basic_scraping {
             existing_games = match serde_json::from_str(&file_content) {
                 Ok(games) => games,
                 Err(e) => {
-                    eprintln!("Failed to parse existing JSON data: {:#?}", e);
+                    eprintln!("Gagal mengurai data JSON yang ada: {:#?}", e);
                     return Err(Box::new(ScrapingError::FileJSONError(e)));
                 }
             };
@@ -252,7 +252,7 @@ pub mod basic_scraping {
             for (i, scraped_game) in recently_up_games.iter().enumerate() {
                 if i < existing_games.len() && scraped_game.title == existing_games[i].title {
                     println!(
-                        "Game '{}' matches with the existing file. Stopping...",
+                        "Game '{}' cocok dengan file yang ada. Menghentikan...",
                         scraped_game.title
                     );
                     return Ok(()); // Stop the process if the game matches
@@ -264,7 +264,7 @@ pub mod basic_scraping {
         let json_data = match serde_json::to_string_pretty(&recently_up_games) {
             Ok(json_d) => json_d,
             Err(e) => {
-                eprintln!("Error serializing recently_up_games: {:#?}", e);
+                eprintln!("Terjadi kesalahan saat membuat serial recently_up_games: {:#?}", e);
                 return Err(Box::new(ScrapingError::FileJSONError(e)));
             }
         };
@@ -272,7 +272,7 @@ pub mod basic_scraping {
         let mut file = match tokio::fs::File::create(&binding).await {
             Ok(file) => file,
             Err(e) => {
-                eprintln!("File could not be created: {:#?}", e);
+                eprintln!("File tidak dapat dibuat: {:#?}", e);
                 return Err(Box::new(ScrapingError::CreatingFileError {
                     source: e,
                     fn_name: "scraping_func()".to_string(),
@@ -281,7 +281,7 @@ pub mod basic_scraping {
         };
 
         if let Err(e) = file.write_all(json_data.as_bytes()).await {
-            eprintln!("Error writing to the file newly_added_games.json: {:#?}", e);
+            eprintln!("Terjadi kesalahan saat menulis ke file newly_added_games.json: {:#?}", e);
             return Err(Box::new(ScrapingError::CreatingFileError {
                 source: e,
                 fn_name: "scraping_func()".to_string(),
@@ -297,7 +297,7 @@ pub mod basic_scraping {
         let end_time = Instant::now();
         let duration_time_process = end_time - start_time;
         info!(
-            "Data has been written to newly_added_games.json. Time was : {:#?}",
+            "Data telah ditulis ke newly_added_games.json. Waktunya adalah: {:#?}",
             duration_time_process
         );
 
@@ -319,8 +319,8 @@ pub mod basic_scraping {
         let res = match client.get(url).send().await {
             Ok(response) => response,
             Err(e) => {
-                eprintln!("Failed to get a response from URL: {}", url);
-                eprintln!("Error: {:#?}", e);
+                eprintln!("Gagal mendapat respons dari URL: {}", url);
+                eprintln!("Kesalahan: {:#?}", e);
                 return Err(Box::new(ScrapingError::ReqwestError(e)));
             }
         };
@@ -328,8 +328,8 @@ pub mod basic_scraping {
         let body = match res.text().await {
             Ok(body) => body,
             Err(e) => {
-                eprintln!("Failed to get a body from URL: {}", url);
-                eprintln!("Error: {:#?}", e);
+                eprintln!("Gagal mendapatkan isi dari URL: {}", url);
+                eprintln!("Kesalahan: {:#?}", e);
 
                 return Err(Box::new(ScrapingError::ReqwestError(e)));
             }
@@ -340,7 +340,7 @@ pub mod basic_scraping {
         let titles_selector = match scraper::Selector::parse(".widget-grid-view-image > a") {
             Ok(selector) => selector,
             Err(err) => {
-                eprintln!("Error parsing titles selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih judul: {:#?}", err);
                 return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
             }
         };
@@ -348,7 +348,7 @@ pub mod basic_scraping {
         let images_selector = match scraper::Selector::parse(".widget-grid-view-image > a > img") {
             Ok(selector) => selector,
             Err(err) => {
-                eprintln!("Error parsing images selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih gambar: {:#?}", err);
                 return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
             }
         };
@@ -356,7 +356,7 @@ pub mod basic_scraping {
         let tag_selector = match scraper::Selector::parse(".entry-content p strong:first-of-type") {
             Ok(selector) => selector,
             Err(err) => {
-                eprintln!("Error parsing tag selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih tag: {:#?}", err);
                 return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
             }
         };
@@ -364,7 +364,7 @@ pub mod basic_scraping {
         let magnetlink_selector = match scraper::Selector::parse("a[href*='magnet']") {
             Ok(selector) => selector,
             Err(err) => {
-                eprintln!("Error parsing magnetlink selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih magnetlink: {:#?}", err);
                 return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
             }
         };
@@ -372,7 +372,7 @@ pub mod basic_scraping {
         let hreflink_selector = match scraper::Selector::parse(".widget-grid-view-image > a ") {
             Ok(selector) => selector,
             Err(err) => {
-                eprintln!("Error parsing hreflink selector: {:#?}", err);
+                eprintln!("Terjadi kesalahan saat mengurai pemilih hreflink: {:#?}", err);
                 return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
             }
         };
@@ -411,7 +411,7 @@ pub mod basic_scraping {
             let existing_games: Vec<Game> = match serde_json::from_str(&file_content) {
                 Ok(games) => games,
                 Err(e) => {
-                    error!("Failed to parse existing JSON data: {:#?}", e);
+                    error!("Gagal mengurai data JSON yang ada: {:#?}", e);
                     return Err(Box::new(ScrapingError::FileJSONError(e)));
                 }
             };
@@ -424,7 +424,7 @@ pub mod basic_scraping {
 
                 if i < existing_games.len() && title == existing_games[i].title {
                     info!(
-                        "Game '{}' matches with the existing file. Stopping...",
+                        "Game '{}' cocok dengan file yang ada. Menghentikan...",
                         title
                     );
                     return Ok(()); // Stop the process if the game matches
@@ -444,7 +444,7 @@ pub mod basic_scraping {
             let game_res = match client.get(href).send().await {
                 Ok(game_res) => game_res,
                 Err(e) => {
-                    eprintln!("Error getting game response: {:#?}", e);
+                    eprintln!("Terjadi kesalahan saat menerima respons game: {:#?}", e);
                     continue;
                 }
             };
@@ -452,7 +452,7 @@ pub mod basic_scraping {
             let game_body = match game_res.text().await {
                 Ok(game_body) => game_body,
                 Err(e) => {
-                    eprintln!("Error getting game body: {:#?}", e);
+                    eprintln!("Terjadi kesalahan saat mendapatkan isi game: {:#?}", e);
                     continue;
                 }
             };
@@ -479,7 +479,7 @@ pub mod basic_scraping {
             ) {
                 Ok(selector) => selector,
                 Err(err) => {
-                    eprintln!("Error parsing long_image_selector: {:#?}", err);
+                    eprintln!("Terjadi kesalahan saat mengurai long_image_selector: {:#?}", err);
                     return Err(Box::new(ScrapingError::SelectorError(err.to_string())));
                 }
             };
@@ -549,7 +549,7 @@ pub mod basic_scraping {
         let json_data = match serde_json::to_string_pretty(&popular_games) {
             Ok(json_d) => json_d,
             Err(e) => {
-                eprintln!("Error serializing popular_games: {:#?}", e);
+                eprintln!("Terjadi kesalahan saat membuat serial popular_games: {:#?}", e);
                 return Err(Box::new(ScrapingError::FileJSONError(e)));
             }
         };
@@ -557,7 +557,7 @@ pub mod basic_scraping {
         let mut file = match tokio::fs::File::create(&binding).await {
             Ok(file) => file,
             Err(e) => {
-                eprintln!("File could not be created: {:#?}", e);
+                eprintln!("File tidak dapat dibuat: {:#?}", e);
                 return Err(Box::new(ScrapingError::CreatingFileError {
                     source: e,
                     fn_name: "popular_games_scraping_func()".to_string(),
@@ -566,7 +566,7 @@ pub mod basic_scraping {
         };
 
         if let Err(e) = file.write_all(json_data.as_bytes()).await {
-            eprintln!("Error writing to the file popular_games.json: {:#?}", e);
+            eprintln!("Terjadi kesalahan saat menulis ke file popular_games.json: {:#?}", e);
             return Err(Box::new(ScrapingError::CreatingFileError {
                 source: e,
                 fn_name: "popular_games_scraping_func()".to_string(),
@@ -576,7 +576,7 @@ pub mod basic_scraping {
         let end_time = Instant::now();
         let duration_time_process = end_time - start_time;
         info!(
-            "Data has been written to popular_games.json. Time was: {:#?}",
+            "Data telah ditulis ke popular_games.json. Waktu: {:#?}",
             duration_time_process
         );
 
@@ -587,7 +587,7 @@ pub mod basic_scraping {
     pub async fn recently_updated_games_scraping_func(
         app_handle: tauri::AppHandle,
     ) -> Result<(), Box<ScrapingError>> {
-        info!("Starting recently_updated_games_scraping_func...");
+        info!("Memulai recently_updated_games_scraping_func...");
 
         let start_time = Instant::now();
         let mut recent_games: Vec<Game> = Vec::new();
@@ -599,12 +599,12 @@ pub mod basic_scraping {
         let res = match client.get(url).send().await {
             Ok(response) => response,
             Err(e) => {
-                eprintln!("Network error while requesting {}: {}", &url, e);
+                eprintln!("Kesalahan jaringan saat meminta {}: {}", &url, e);
                 app_handle
                     .emit_all(
                         "scraping_failed",
                         format!(
-                            "Failed to scrape recently updated games. Network error: {}",
+                            "Gagal meng-scraping game yang baru saja diperbarui. Kesalahan jaringan: {}",
                             e
                         ),
                     )
@@ -615,11 +615,11 @@ pub mod basic_scraping {
 
         // Check for successful response
         if !res.status().is_success() {
-            eprintln!("Error: Failed to connect to the website or the website is down.");
+            eprintln!("Kesalahan: Gagal terhubung ke situs web atau situs web sedang tidak aktif.");
             app_handle
                 .emit_all(
                     "scraping_failed",
-                    format!("Failed to connect to {}. Website might be down.", &url),
+                    format!("Gagal terhubung ke {}. Situs web mungkin sedang tidak berfungsi.", &url),
                 )
                 .unwrap();
             return Ok(());
@@ -628,11 +628,11 @@ pub mod basic_scraping {
         let body = match res.text().await {
             Ok(body) => body,
             Err(e) => {
-                eprintln!("Failed to read response body from {}: {}", &url, e);
+                eprintln!("Gagal membaca isi respons dari {}: {}", &url, e);
                 app_handle
                     .emit_all(
                         "scraping_failed",
-                        format!("Failed to read response body from {}.", &url),
+                        format!("Gagal membaca isi respons dari {}.", &url),
                     )
                     .unwrap();
                 return Ok(());
@@ -669,13 +669,13 @@ pub mod basic_scraping {
                 Ok(game_res) => game_res,
                 Err(e) => {
                     eprintln!(
-                        "Network error while requesting game data from {}: {}",
+                        "Kesalahan jaringan saat meminta data game dari {}: {}",
                         href, e
                     );
                     app_handle
                         .emit_all(
                             "scraping_failed",
-                            format!("Failed to fetch game data from {}.", href),
+                            format!("Gagal mengambil data game dari {}.", href),
                         )
                         .unwrap();
                     continue; // Continue scraping other games
@@ -685,11 +685,11 @@ pub mod basic_scraping {
             let game_body = match game_res.text().await {
                 Ok(game_body) => game_body,
                 Err(e) => {
-                    eprintln!("Failed to read game response body from {}: {}", href, e);
+                    eprintln!("Gagal membaca isi respons game dari {}: {}", href, e);
                     app_handle
                         .emit_all(
                             "scraping_failed",
-                            format!("Failed to read game response body from {}.", href),
+                            format!("Gagal membaca isi respons game dari {}.", href),
                         )
                         .unwrap();
                     continue;
@@ -747,11 +747,11 @@ pub mod basic_scraping {
         let json_data = match serde_json::to_string_pretty(&recent_games) {
             Ok(json_d) => json_d,
             Err(e) => {
-                eprintln!("Error serializing recent_games: {:#?}", e);
+                eprintln!("Kesalahan serializing recent_games: {:#?}", e);
                 app_handle
                     .emit_all(
                         "scraping_failed",
-                        "Failed to serialize recently updated games.",
+                        "Gagal membuat serial game yang baru saja diperbarui.",
                     )
                     .unwrap();
                 return Err(Box::new(ScrapingError::FileJSONError(e)));
@@ -762,11 +762,11 @@ pub mod basic_scraping {
         let mut file = match tokio::fs::File::create(&binding).await {
             Ok(file) => file,
             Err(e) => {
-                eprintln!("File could not be created: {:#?}", e);
+                eprintln!("File tidak dapat dibuat: {:#?}", e);
                 app_handle
                     .emit_all(
                         "scraping_failed",
-                        "Failed to create file for recently updated games.",
+                        "Gagal membuat file untuk game yang baru saja diperbarui.",
                     )
                     .unwrap();
                 return Err(Box::new(ScrapingError::CreatingFileError {
@@ -778,7 +778,7 @@ pub mod basic_scraping {
 
         if let Err(e) = file.write_all(json_data.as_bytes()).await {
             eprintln!(
-                "Error writing to the file recently_updated_games.json: {:#?}",
+                "Kesalahan saat menulis ke file recently_updated_games.json: {:#?}",
                 e
             );
             return Err(Box::new(ScrapingError::CreatingFileError {
@@ -789,7 +789,7 @@ pub mod basic_scraping {
 
         let duration_time_process = start_time.elapsed();
         info!(
-            "Data has been written to recently_updated_games.json. Time taken: {:#?}",
+            "Data telah ditulis ke recently_updated_games.json. Waktu yang dibutuhkan: {:#?}",
             duration_time_process
         );
 
@@ -797,7 +797,7 @@ pub mod basic_scraping {
         app_handle
             .emit_all(
                 "scraping_complete",
-                "Recently updated games scraping completed.",
+                "Scraping game yang baru saja diperbarui telah selesai.",
             )
             .unwrap();
 
@@ -983,14 +983,14 @@ pub mod commands_scraping {
         binding.push("tempGames");
         binding.push("singular_game_temp.json");
 
-        let mut file = File::create(binding).expect("File could not be created !");
+        let mut file = File::create(binding).expect("File tidak dapat dibuat !");
 
         file.write_all(json_data.as_bytes())?;
 
         let end_time = Instant::now();
         let duration_time_process = end_time - start_time;
         info!(
-            "Data has been written to singular_game_temp.json. Time was : {:#?}",
+            "Data telah ditulis ke singular_game_temp.json. Waktunya adalah: {:#?}",
             duration_time_process
         );
 
