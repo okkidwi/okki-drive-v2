@@ -39,38 +39,38 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
             const peers = stats?.live?.snapshot?.peer_stats
             setPeerStats(peers ? peers : null)
         } catch (error) {
-            console.error('Error fetching torrent stats:', error)
+            console.error('Terjadi kesalahan saat mengambil statistik torrent:', error)
         }
     }
 
     const finishedGamePopup = () => {
         Swal.fire({
-            title: 'Game is Done',
-            text: 'This game is already done downloading, please check your folder and/or check if the game setup is installing, if yes, let it install.',
+            title: 'Game Selesai',
+            text: 'Game ini sudah selesai diunduh, silakan periksa folder Anda dan/atau periksa apakah pengaturan game sudah diinstal, jika ya, biarkan diinstal.',
             icon: 'info',
         })
     }
 
     const unexpectedGameResumeError = () => {
         Swal.fire({
-            title: 'Unexpected Error',
-            text: 'An unexpected error happened while resuming the game, please try to continue the download by searching the game and clicking on the Download button again, this will resume it, if not please contact us on Discord available in the Settings page.',
+            title: 'Kesalahan Tak Terduga',
+            text: 'Terjadi kesalahan yang tidak terduga saat melanjutkan game, silakan coba melanjutkan pengunduhan dengan mencari game dan mengklik tombol Unduh lagi, ini akan melanjutkannya, jika tidak silakan hubungi kami di Facebook atau Telegram yang tersedia di halaman Pengaturan.',
             icon: 'error',
         })
     }
 
     const unexpectedGameStopError = () => {
         Swal.fire({
-            title: 'Unexpected Error',
-            text: 'An unexpected error happened while stopping the game, please try to restart the download by searching the game and clicking on the Download button again, this will resume it you can then stop it. If that doesn\'t work please contact us on Discord available in the Settings page.',
+            title: 'Kesalahan Tak Terduga',
+            text: 'Terjadi kesalahan yang tidak terduga saat menghentikan game, coba mulai ulang pengunduhan dengan mencari game dan mengklik tombol Unduh lagi, ini akan melanjutkannya, Anda kemudian dapat menghentikannya. Jika tidak berhasil, silakan hubungi kami di Facebook atau Telegram yang tersedia di halaman Pengaturan.',
             icon: 'error',
         })
     }
 
     const unexpectedGameDeleteError = () => {
         Swal.fire({
-            title: 'Unexpected Error',
-            text: 'An unexpected error happened while deleting the files of the game, please check if you aren\'t running the game or if there isn\'t any processes creeping on any files (It can be anything that has opened a file of the game, even notepad). If that doesn\'t work please contact us on Discord available in the Settings page.',
+            title: 'Kesalahan Tak Terduga',
+            text: 'Terjadi kesalahan tak terduga saat menghapus file game, harap periksa apakah Anda tidak menjalankan game atau tidak ada proses apa pun yang merayapi file apa pun (Bisa berupa apa saja yang telah membuka file game, bahkan buku catatan). Jika tidak berhasil, silakan hubungi kami di Facebook atau Telegram yang tersedia di halaman Pengaturan.',
             icon: 'error',
         })
     }
@@ -85,13 +85,13 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 try {
                     await invoke('api_resume_torrent', { torrentIdx: hash })
                 } catch (err) {
-                    console.error('Error Resuming Torrent :', err)
+                    console.error('Kesalahan Saat Melanjutkan Torrent :', err)
                     if (
-                        err.AnyhowError === 'TorrentManager is not initialized.'
+                        err.AnyhowError === 'TorrentManager tidak diinisialisasi.'
                     ) {
                         const lastInputPath = localStorage.getItem('LUP')
                         console.log(
-                            'TorrentManager is not initialized. Initializing it...'
+                            'TorrentManager tidak diinisialisasi. Menginisialisasinya...'
                         )
 
                         // Initialize Torrent.
@@ -102,9 +102,9 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                 appCachePath: cacheDirPath,
                                 appSettingsPath: dirPath,
                             })
-                            console.log('Done Init')
+                            console.log('Selesai Inisiasi')
                             try {
-                                console.log('Resuming')
+                                console.log('Melanjutkan')
 
                                 //! ERROR :  Read Below.
                                 //TODO: Due to an issue in the librqbit v7.1.0-beta.1 that we are using,we cannot just restart a game by unpausing it, we have to "start" it, we can't do anything but wait for a fix in librqbit.
@@ -117,20 +117,20 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                 setTorrentTrigger(true)
                             } catch (error) {
                                 console.error(
-                                    'Error Toggling Torrent State Again:',
+                                    'Kesalahan Saat Mengalihkan Status Torrent Lagi:',
                                     error
                                 )
                                 unexpectedGameResumeError()
                             }
                         } catch (error) {
                             console.error(
-                                'Error Initializing Torrent Session:',
+                                'Kesalahan Saat Menginisialisasi Sesi Torrent:',
                                 error
                             )
                         }
                     } else {
                         console.error(
-                            'An error occurred while resuming torrent:',
+                            'Terjadi kesalahan saat melanjutkan torrent:',
                             err
                         )
                     }
@@ -143,7 +143,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 setIsPaused(true)
             }
         } catch (error) {
-            console.error('Error toggling torrent state:', error)
+            console.error('Terjadi kesalahan saat mengganti status torrent:', error)
         }
     }
 
@@ -175,21 +175,21 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
             try {
                 const state = gameInfo()?.state
                 if (state === null || state === undefined) {
-                    return 'Inactive'
+                    return 'Tidak aktif'
                 }
                 switch (state) {
-                    case 'paused':
-                        return 'Resume'
+                    case 'dijeda':
+                        return 'Melanjutkan'
                     case 'live':
-                        return 'Pause'
-                    case 'initializing':
-                        return 'Loading...'
+                        return 'Jeda'
+                    case 'menginisialisasi':
+                        return 'Memuat...'
                     default:
-                        return 'Unknown State'
+                        return 'State tidak diketahui'
                 }
             } catch (error) {
-                console.error('Error determining button text:', error)
-                return 'Error'
+                console.error('Kesalahan dalam menentukan teks tombol:', error)
+                return 'Kesalahan'
             }
         }
 
@@ -240,7 +240,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 labels: [],
                 datasets: [
                     {
-                        label: 'Download Speed (MB/s)',
+                        label: 'Kecepatan Unduh (MB/s)',
                         data: [],
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -248,7 +248,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                         pointStyle: false,
                     },
                     {
-                        label: 'Upload Speed (MB/s)',
+                        label: 'Kecepatan Unggah (MB/s)',
                         data: [],
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -262,13 +262,13 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                     x: {
                         title: {
                             display: false,
-                            text: 'Time',
+                            text: 'Waktu',
                         },
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Speed (MB/s)',
+                            text: 'Kecepatan (MB/s)',
                         },
                     },
                 },
@@ -282,7 +282,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 labels: [],
                 datasets: [
                     {
-                        label: 'Downloaded MB',
+                        label: 'Telah Diunduh MB',
                         data: [],
                         borderColor: 'rgba(144, 238, 144, 1)',
                         backgroundColor: 'rgba(144, 238, 144, 0.2)',
@@ -290,7 +290,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                         pointStyle: false,
                     },
                     {
-                        label: 'Uploaded MB',
+                        label: 'Diunggah MB',
                         data: [],
                         borderColor: 'rgba(221, 160, 221, 1)',
                         backgroundColor: 'rgba(221, 160, 221, 0.2)',
@@ -304,7 +304,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                     x: {
                         title: {
                             display: false,
-                            text: 'Time',
+                            text: 'Waktu',
                         },
                     },
                     y: {
@@ -324,13 +324,13 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
         console.log(hash)
         if (CTG) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you really want to delete the current download? It will stop the current download but won't delete the files so you can still start it later.",
-                footer: 'You can also delete the files directly by clicking on this button <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
+                title: 'Apa Anda yakin?',
+                text: "Apakah Anda benar-benar ingin menghapus unduhan saat ini? Tindakan ini akan menghentikan unduhan saat ini tetapi tidak akan menghapus file sehingga Anda masih dapat memulainya nanti.",
+                footer: 'Anda juga dapat menghapus file secara langsung dengan mengklik tombol ini <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: 'Ya, hapus saja!',
+                cancelButtonText: 'Batal',
                 didRender: () => {
                     if (hash) {
                         // Add event listener for the custom "Delete Files" button
@@ -344,21 +344,21 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                         torrentIdx: hash,
                                     })
                                     Swal.fire({
-                                        title: 'Deleted',
-                                        text: 'The files of the current download have been deleted.',
+                                        title: 'Dihapus',
+                                        text: 'File unduhan saat ini telah dihapus.',
                                         icon: 'success',
                                     })
                                     localStorage.removeItem('CDG')
                                     localStorage.removeItem('CTG')
                                     window.dispatchEvent(new Event('storage'))
                                 } catch(error) {
-                                    console.error('Error Resuming Torrent :', error)
+                                    console.error('Kesalahan Saat Melanjutkan Torrent :', error)
                                     if (
-                                        error.AnyhowError === 'TorrentManager is not initialized.'
+                                        error.AnyhowError === 'TorrentManager tidak diinisialisasi.'
                                     ) {
                                         const lastInputPath = localStorage.getItem('LUP')
                                         console.log(
-                                            'TorrentManager is not initialized. Initializing it...'
+                                            'TorrentManager tidak diinisialisasi. Menginisialisasinya...'
                                         )
                 
                                         // Initialize Torrent.
@@ -369,21 +369,21 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                                 appCachePath: cacheDirPath,
                                                 appSettingsPath: dirPath,
                                             })
-                                            console.log('Done Init')
+                                            console.log('Selesai Inisiasi')
                                             try {
-                                                console.log('Stopping')
+                                                console.log('Dihentikan')
             
                                                 await invoke('api_stop_torrent', { torrentIdx: hash })
                                                 localStorage.removeItem('CDG')
                                                 window.dispatchEvent(new Event('storage'))
                                                 Swal.fire({
-                                                    title: 'Deleted',
-                                                    text: 'The current download has been deleted.',
+                                                    title: 'Dihapus',
+                                                    text: 'Unduhan saat ini telah dihapus.',
                                                     icon: 'success',
                                                 })
                                             } catch (error) {
                                                 console.error(
-                                                    'Error Deleting Torrent Again:',
+                                                    'Kesalahan Saat Menghapus Torrent Lagi:',
                                                     error
                                                 )
                                                 unexpectedGameResumeError()
@@ -398,9 +398,9 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
 
                             } catch (error) {
                                 Swal.fire({
-                                    title: 'Error Deleting Files',
-                                    text: `An error occurred while deleting the files: ${error}`,
-                                    footer: 'If you do not understand the error, please contact us on Discord before opening any issues on GitHub.',
+                                    title: 'Kesalahan Saat Menghapus File',
+                                    text: `Terjadi kesalahan saat menghapus file: ${error}`,
+                                    footer: 'Jika Anda tidak memahami kesalahannya, silakan hubungi kami di Facebook atau Telegram.',
                                     icon: 'error',
                                 })
                             }
@@ -420,18 +420,18 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                         localStorage.removeItem('CDG')
                         window.dispatchEvent(new Event('storage'))
                         Swal.fire({
-                            title: 'Deleted',
-                            text: 'The current download has been deleted.',
+                            title: 'Dihapus',
+                            text: 'Unduhan saat ini telah dihapus.',
                             icon: 'success',
                         })
                     } catch(error) {
-                        console.error('Error Resuming Torrent :', error)
+                        console.error('Kesalahan Saat Melanjutkan Torrent :', error)
                         if (
-                            error.AnyhowError === 'TorrentManager is not initialized.'
+                            error.AnyhowError === 'TorrentManager tidak diinisialisasi.'
                         ) {
                             const lastInputPath = localStorage.getItem('LUP')
                             console.log(
-                                'TorrentManager is not initialized. Initializing it...'
+                                'TorrentManager tidak diinisialisasi. Menginisialisasinya...'
                             )
     
                             // Initialize Torrent.
@@ -442,21 +442,21 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                     appCachePath: cacheDirPath,
                                     appSettingsPath: dirPath,
                                 })
-                                console.log('Done Init')
+                                console.log('Selesai Inisiasi')
                                 try {
-                                    console.log('Stopping')
+                                    console.log('Dihentikan')
 
                                     await invoke('api_stop_torrent', { torrentIdx: hash })
                                     localStorage.removeItem('CDG')
                                     window.dispatchEvent(new Event('storage'))
                                     Swal.fire({
-                                        title: 'Deleted',
-                                        text: 'The current download has been deleted.',
+                                        title: 'Dihapus',
+                                        text: 'Unduhan saat ini telah dihapus.',
                                         icon: 'success',
                                     })
                                 } catch (error) {
                                     console.error(
-                                        'Error Stopping Torrent Again:',
+                                        'Kesalahan Saat Menghentikan Torrent Lagi:',
                                         error
                                     )
                                     unexpectedGameResumeError()
@@ -471,8 +471,8 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
             })
         } else {
             Swal.fire({
-                title: 'Nothing',
-                text: 'Nothing to stop here :D',
+                title: 'Tidak Ada',
+                text: 'Tidak ada yang berhenti di sini :D',
                 icon: 'question',
             })
         }
@@ -499,7 +499,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 <div class="arrow-down"></div>
             </div>
             <div class="stats-panel">
-                <h2>Game Download Progress</h2>
+                <h2>Progress Unduhan Game</h2>
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div
@@ -507,7 +507,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                             style={{ width: `${percentage()}%` }}
                         ></div>
                         <span class="progress-text">
-                            DOWNLOADING {percentage()}%
+                            MENGUNDUH {percentage()}%
                         </span>
                         <div class="icons">
                             <span class="icon" onClick={handleStopTorrent}>
@@ -524,30 +524,30 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                 </div>
                 {/* Display peer stats */}
                 <div class="peer-stats-container">
-                    <h3>Torrent Peer Information:</h3>
+                    <h3>Informasi Peer Torrent:</h3>
                     {peerStats() ? (
                         <>
                             <p>
-                                <strong>Connected Peers:</strong>{' '}
+                                <strong>Peer Terhubung:</strong>{' '}
                                 {peerStats().live}
                             </p>
                             <p>
-                                <strong>Connecting Peers:</strong>{' '}
+                                <strong>Menghubungkan Peer:</strong>{' '}
                                 {peerStats().connecting}
                             </p>
                             <p>
-                                <strong>Dead Peers:</strong> {peerStats().dead}
+                                <strong>Peer Mati:</strong> {peerStats().dead}
                             </p>
                             <p>
-                                <strong>Queued Peers:</strong>{' '}
+                                <strong>Peer Mengantri:</strong>{' '}
                                 {peerStats().queued}
                             </p>
                             <p>
-                                <strong>Seen Peers:</strong> {peerStats().seen}
+                                <strong>Peer Terlihat:</strong> {peerStats().seen}
                             </p>
                         </>
                     ) : (
-                        <p>No peer data available.</p>
+                        <p>Tidak ada data peer yang tersedia.</p>
                     )}
                 </div>
             </div>
