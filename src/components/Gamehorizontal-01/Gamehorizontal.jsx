@@ -105,7 +105,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             footer: 'Anda juga dapat menghapus file secara langsung dengan mengklik tombol ini <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonText: 'Ya, hapus saja!',
+                            confirmButtonText: 'Ya, hapus itu!',
                             cancelButtonText: 'Batal',
                             didRender: () => {
                                 let CTG = localStorage.getItem('CTG');
