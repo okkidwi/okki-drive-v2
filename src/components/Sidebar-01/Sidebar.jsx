@@ -78,7 +78,7 @@ function Sidebar() {
       <div className="sidebar-downloading-game">
         <p className="sidebar-heading">
           <span className="sidebar-heading-text">
-            <br/>MENGUNDUH GAME<br/>
+            <br/>UNDUHAN GAME<br/>
             {/* {translate('downloading_games_placeholder', {})} */}
           </span>
         </p>
