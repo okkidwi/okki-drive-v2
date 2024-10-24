@@ -33,7 +33,7 @@ pub mod torrent_calls {
         #[error("Modifying JSON Error: {0}")]
         FileJSONError(String),
 
-        #[error("Error While Creating And Manipulating The Regex: {0}")]
+        #[error("Kesalahan Saat Membuat dan Memanipulasi Regex: {0}")]
         RegexError(String),
     }
 
@@ -124,7 +124,7 @@ pub mod torrent_calls {
             let content = match fs::read_to_string(config_path) {
                 Ok(content) => content,
                 Err(err) => {
-                    error!("Error while reading TOML config file: {:#?}", err);
+                    error!("Terjadi kesalahan saat membaca file konfigurasi TOML: {:#?}", err);
                     return Self::create_default_toml(config_path);
                 }
             };
@@ -132,8 +132,8 @@ pub mod torrent_calls {
             match toml::from_str(&content) {
                 Ok(configuration) => configuration,
                 Err(err) => {
-                    error!("Error while parsing TOML file: {:#?}", err);
-                    panic!("Failed to parse config file.");
+                    error!("Terjadi kesalahan saat mengurai file TOML: {:#?}", err);
+                    panic!("Gagal mengurai file konfigurasi.");
                 }
             }
         }
@@ -142,11 +142,11 @@ pub mod torrent_calls {
         fn create_default_toml(config_path: &str) -> Self {
             let default_config = Self::default();
             let toml_string =
-                toml::to_string(&default_config).expect("Failed to serialize default config");
+                toml::to_string(&default_config).expect("Gagal membuat serial konfigurasi default");
 
             match fs::write(config_path, toml_string) {
-                Ok(_) => info!("Default TOML configuration created at: {}", config_path),
-                Err(err) => error!("Failed to create default TOML file: {:#?}", err),
+                Ok(_) => info!("Konfigurasi TOML default dibuat di: {}", config_path),
+                Err(err) => error!("Gagal membuat file TOML default: {:#?}", err),
             }
 
             default_config
@@ -279,7 +279,7 @@ pub mod torrent_calls {
                 }),
             )
             .await
-            .context("Error While Adding The Torrent To The Session")
+            .context("Kesalahan Saat Menambahkan Torrent Ke Sesi")
             .unwrap();
 
             let files_names: Vec<String> = added_torrent_response
@@ -331,9 +331,9 @@ pub mod torrent_calls {
             let actual_torrent_magnet = match Magnet::parse(&magnet_link) {
                 Ok(magnet) => magnet,
                 Err(e) => {
-                    error!("Error Parsing Magnet : {:#?}", e);
+                    error!("Kesalahan Penguraian Magnet : {:#?}", e);
                     return Err(Box::new(TorrentError::AnyhowError(
-                        "Error forgetting the torrent from the session persistence.".to_string(),
+                        "Kesalahan lupa torrent dari persistensi sesi.".to_string(),
                     )));
                 }
             };
@@ -352,14 +352,14 @@ pub mod torrent_calls {
                         match self.stop_torrent(torrent.info_hash.clone()).await {
                             Ok(()) => {
                                 info!(
-                                    "Forgot the torrent ID : {:#?} | Hash : {:#?}",
+                                    "Lupa ID torrent : {:#?} | Hash : {:#?}",
                                     &torrent.id, &torrent.info_hash
                                 );
                             }
                             Err(e) => {
-                                error!("Error forgetting the torrent from the session persistence : {:#?}", e);
+                                error!("Kesalahan lupa torrent dari persistensi sesi : {:#?}", e);
                                 return Err(Box::new(TorrentError::AnyhowError(
-                                    "Error forgetting the torrent from the session persistence."
+                                    "Kesalahan lupa torrent dari persistensi sesi."
                                         .to_string(),
                                 )));
                             }
@@ -383,13 +383,13 @@ pub mod torrent_calls {
             {
                 Ok(response) => {
                     info!(
-                        "Torrent Was Successfully Added And The Installation Successfully Started"
+                        "Torrent Berhasil Ditambahkan dan Instalasi Berhasil Dimulai"
                     );
 
                     Some(response)
                 }
                 Err(e) => {
-                    error!("Error While Adding The Torrent To Download : {}", e);
+                    error!("Kesalahan Saat Menambahkan Torrent Untuk Diunduh : {}", e);
                     None
                 }
             };
@@ -408,10 +408,10 @@ pub mod torrent_calls {
 
             match Api::api_torrent_action_forget(&self.api_session, torrent_hash).await {
                 Ok(_) => {
-                    info!("Torrent Successfully Stopped");
+                    info!("Torrent Berhasil Dihentikan");
                 }
                 Err(err) => {
-                    error!("Torrent Couldn't Stop : {}", err)
+                    error!("Torrent Tidak Bisa Berhenti : {}", err)
                 }
             }
 
@@ -432,8 +432,8 @@ pub mod torrent_calls {
             #[cfg(target_os = "linux")]
             //TODO: Add linux automate_until_download command
 
-            info!("Torrent has completed!");
-            info!("Game Installation Has been Started");
+            info!("Torrent telah selesai!");
+            info!("Instalasi Game Telah Dimulai");
 
             Ok(())
         }
@@ -449,7 +449,7 @@ pub mod torrent_calls {
                 Ok(response) => Some(response),
 
                 Err(err) => {
-                    error!("Error Getting Stats: {}", err);
+                    error!("Kesalahan dalam Mendapatkan Statistik: {}", err);
                     None
                 }
             };
@@ -463,10 +463,10 @@ pub mod torrent_calls {
 
             match Api::api_torrent_action_pause(&self.api_session, torrent_hash).await {
                 Ok(_) => {
-                    info!("Torrent Successfully Paused");
+                    info!("Torrent Berhasil Dijeda");
                 }
                 Err(err) => {
-                    error!("Torrent Couldn't Pause : {}", err)
+                    error!("Torrent Tidak Bisa Dijeda : {}", err)
                 }
             }
 
@@ -480,10 +480,10 @@ pub mod torrent_calls {
             // * Use forget because it will just remove it from the session and not delete the files
             match Api::api_torrent_action_forget(&self.api_session, torrent_hash).await {
                 Ok(_) => {
-                    info!("Torrent Successfully Stopped");
+                    info!("Torrent Berhasil Dihentikan");
                 }
                 Err(err) => {
-                    error!("Torrent Couldn't Stop : {}", err)
+                    error!("Torrent Tidak Bisa Dihentikan : {}", err)
                 }
             }
 
@@ -497,10 +497,10 @@ pub mod torrent_calls {
             // * Use this to resume the function (It will take advantage of the fastresume option)
             match Api::api_torrent_action_start(&self.api_session, torrent_hash).await {
                 Ok(_) => {
-                    info!("Torrent Successfully Resumed");
+                    info!("Torrent Berhasil Dilanjutkan");
                 }
                 Err(err) => {
-                    error!("Torrent Couldn't Resume : {}", err)
+                    error!("Torrent Tidak Dapat Dilanjutkan : {}", err)
                 }
             }
 
@@ -513,10 +513,10 @@ pub mod torrent_calls {
 
             match Api::api_torrent_action_delete(&self.api_session, torrent_hash).await {
                 Ok(_) => {
-                    info!("Torrent Successfully Resumed");
+                    info!("Torrent Berhasil Dilanjutkan");
                 }
                 Err(err) => {
-                    error!("Torrent Couldn't Resume : {}", err)
+                    error!("Torrent Tidak Dapat Dilanjutkan : {}", err)
                 }
             }
 
@@ -564,7 +564,7 @@ pub mod torrent_commands {
             Ok(core_info)
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -585,14 +585,14 @@ pub mod torrent_commands {
                     .download_torrent_with_args(magnet_link, download_file_list)
                     .await
                 {
-                    error!("Error downloading torrent: {:?}", e);
+                    error!("Kesalahan saat mengunduh torrent: {:?}", e);
                 }
             });
 
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -617,13 +617,13 @@ pub mod torrent_commands {
                 )
                 .await
             {
-                error!("Error during the automation of the setup install: {:#?}", e);
+                error!("Kesalahan selama otomatisasi instalasi pengaturan: {:#?}", e);
             }
 
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -641,7 +641,7 @@ pub mod torrent_commands {
             Ok(torrent_stats)
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -659,7 +659,7 @@ pub mod torrent_commands {
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -677,7 +677,7 @@ pub mod torrent_commands {
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -695,7 +695,7 @@ pub mod torrent_commands {
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
@@ -713,7 +713,7 @@ pub mod torrent_commands {
             Ok(())
         } else {
             Err(Box::new(TorrentError::AnyhowError(
-                "TorrentManager is not initialized.".to_string(),
+                "TorrentManager tidak diinisialisasi.".to_string(),
             )))
         }
     }
