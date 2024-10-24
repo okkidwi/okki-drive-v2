@@ -18,7 +18,7 @@
     "chart.js": "4.4.4",
     "solid-js": "^1.7.8",
     "sweetalert2": "^11.12.4",
-    "solid-i18next": "^1.0.2"
+    "i18next": "^23.16.2"
   },
   "devDependencies": {
     "vite": "5.4.2",
