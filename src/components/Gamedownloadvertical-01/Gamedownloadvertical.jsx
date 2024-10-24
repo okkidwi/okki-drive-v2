@@ -326,7 +326,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
             Swal.fire({
                 title: 'Apa Anda yakin?',
                 text: "Apakah Anda benar-benar ingin menghapus unduhan saat ini? Tindakan ini akan menghentikan unduhan saat ini tetapi tidak akan menghapus file sehingga Anda masih dapat memulainya nanti.",
-                footer: 'Anda juga dapat menghapus file secara langsung dengan mengklik tombol ini <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
+                footer: 'Anda juga dapat menghapus file secara langsung dengan mengklik tombol ini <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Hapus File</button>!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, hapus itu!',
