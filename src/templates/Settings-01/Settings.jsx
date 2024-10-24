@@ -1,5 +1,5 @@
 import { createSignal, onMount } from 'solid-js'
-import { useTranslation } from "solid-i18next";
+import { useTranslation } from "i18next";
 import { appConfigDir } from '@tauri-apps/api/path'
 import {
     readTextFile,
