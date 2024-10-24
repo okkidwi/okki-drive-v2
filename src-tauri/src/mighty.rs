@@ -140,7 +140,7 @@ pub mod windows_controls_processes {
 
     pub fn click_ok_button() {
         let ok_button_text = "OK";
-        let first_window_title = "Select Setup Language";
+        let first_window_title = "Pilih Bahasa Pengaturan";
 
         loop {
             let ok_button_hwnd = find_child_window_with_text(ok_button_text, first_window_title);
@@ -151,18 +151,18 @@ pub mod windows_controls_processes {
 
                     if result.is_err() {
                         eprintln!(
-                            "PostMessageW failed to send the message. Result  {:#?}",
+                            "PostMessageW fgagal mengirim pesan. Menghasilkan  {:#?}",
                             result
                         );
                     } else {
                         // // Wait 5 seconds for the next part of the setup to start
                         // thread::sleep(time::Duration::from_millis(5000));
-                        println!("Posted click message to OK button!");
+                        println!("Mengirim pesan klik ke tombol OK!");
                     }
                 }
                 break; // Exit the loop once the button is clicked
             } else {
-                println!("OK button not found. Retrying in 2 seconds...");
+                println!("Tombol OK tidak ditemukan. Mencoba lagi dalam 2 detik...");
                 thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
             }
         }
@@ -188,7 +188,7 @@ pub mod windows_controls_processes {
     }
 
     pub fn click_8gb_limit() {
-        let limit_button_text = "Limit installer to 2 GB of RAM usage";
+        let limit_button_text = "Batasi penggunaan RAM penginstal hingga 2 GB";
         let first_window_title = "Setup -";
 
         loop {
@@ -200,7 +200,7 @@ pub mod windows_controls_processes {
 
                 break; // Exit the loop once the button is clicked or checked
             } else {
-                println!("Limit button not found. Retrying in 2 seconds...");
+                println!("Tombol batasi tidak ditemukan. Mencoba lagi dalam 2 detik...");
                 thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
             }
         }
@@ -215,15 +215,15 @@ pub mod windows_controls_processes {
 
                 if result.is_err() {
                     eprintln!(
-                        "PostMessageW failed to send the message. Result  {:#?} ",
+                        "PostMessageW gagal mengirim pesan. Menghasilkan  {:#?} ",
                         result
                     );
                 } else {
-                    println!("Posted click message to Limit button!");
+                    println!("Kirim pesan klik ke tombol Batasi!");
                 }
             }
         } else {
-            println!("Limit button not found.");
+            println!("Tombol batasi tidak ditemukan.");
         }
     }
 
@@ -238,15 +238,15 @@ pub mod windows_controls_processes {
 
                 if result.is_err() {
                     eprintln!(
-                        "PostMessageW for Next Button failed to send the message. Result  {:#?} ",
+                        "PostMessageW untuk Tombol Berikutnya gagal mengirim pesan. Menghasilkan  {:#?} ",
                         result
                     );
                 } else {
-                    println!("Posted click message to Next button!");
+                    println!("Klik pesan yang diposkan ke tombol Berikutnya!");
                 }
             }
         } else {
-            println!("Next button not found.");
+            println!("Tombol berikutnya tidak ditemukan.");
         }
     }
 
@@ -293,15 +293,15 @@ pub mod windows_controls_processes {
 
                 if result == LRESULT(0) {
                     eprintln!(
-                        "SendMessageW failed to set the text. Error code: {:#?}",
+                        "SendMessageW gagal mengatur teks. Kode kesalahan: {:#?}",
                         result
                     );
                 } else {
-                    println!("Set text in the input field successfully!");
+                    println!("Berhasil mengatur teks di kolom input!");
                 }
             }
         } else {
-            println!("Text input field not found.");
+            println!("Kolom masukan teks tidak ditemukan.");
         }
     }
 
@@ -319,14 +319,14 @@ pub mod windows_controls_processes {
                     let result = PostMessageW(hwnd, BM_CLICK, WPARAM(0), LPARAM(0));
 
                     if result.is_err() {
-                        eprintln!("PostMessageW for Install Button failed to send the message. Result  {:#?} ", result);
+                        eprintln!("PostMessageW untuk Tombol Instal gagal mengirim pesan. Hasil  {:#?} ", result);
                     } else {
-                        println!("Posted click message to Install button!");
+                        println!("Kirim pesan klik ke tombol Instal!");
                         break;
                     }
                 }
             } else {
-                println!("Install button not found. Trying again in 2 seconds...");
+                println!("Tombol instal tidak ditemukan. Coba lagi dalam 2 detik...");
                 thread::sleep(time::Duration::from_secs(2)); // Wait 2 seconds before retrying
             }
         }
@@ -344,7 +344,7 @@ pub mod windows_controls_processes {
             let class_name = get_class_name(hwnd);
 
             if class_name == "TNewProgressBar" {
-                println!("found it");
+                println!("ditemukan");
                 unsafe {
                     *text_input_hwnd = hwnd;
                 }
@@ -389,7 +389,7 @@ pub mod windows_controls_processes {
 
             final_percentage // Return the stored result after breaking out of the loop
         } else {
-            println!("Progress bar not found.");
+            println!("Bilah progress tidak ditemukan.");
             0.0 // Return 0.0 if the progress bar was not found
         }
     }
