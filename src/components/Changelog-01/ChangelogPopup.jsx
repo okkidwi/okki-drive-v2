@@ -46,7 +46,7 @@ const ChangelogPopup = () => {
                         <li>Menambahkan popup untuk Game Selesai dan Kesalahan Resume yang Tidak Terduga</li>
                         <li>Memungkinkan pengguna untuk memulai ulang torrent melalui slide vertikal</li>
                         <li>Merombak halaman Pengaturan dengan pemilih file, penanganan gambar latar belakang, dan penghapusan jalur input</li>
-                        <li>Menambahkan popup changelog untuk menampilkan pembaruan</li>
+                        <li>Menambahkan popup catatan perubahan untuk menampilkan pembaruan</li>
                         <li>Mengimplementasikan peringatan kesalahan jaringan</li>
                         <li>Mempersiapkan perubahan gambar latar belakang di pembaruan mendatang</li>
                         <li>Memulai fitur penyegaran manual untuk pembaruan konten game</li>
@@ -97,7 +97,7 @@ const ChangelogPopup = () => {
                         <li>Memulai migrasi ke Stores sebagai pengganti localStorage</li>
                         <li>Menambahkan penyimpanan `restartTorrentInfo`</li>
                         <li>Meningkatkan keterbacaan HTML</li>
-                        <li>Penyesuaian spasi pada changelog</li>
+                        <li>Penyesuaian spasi pada catatan perubahan</li>
                         <li>Menghentikan penggunaan localStorage</li>
                         <li>Meningkatkan logging selama pemindaian dan tugas jaringan untuk debugging yang lebih baik</li>
                         <li>Mempersiapkan basis kode untuk pembaruan komponen UI tanpa memuat ulang jendela sepenuhnya</li>
