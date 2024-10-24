@@ -112,7 +112,7 @@ function UpdatedGames() {
     return (
         <>
             <div className="title-category updatedgames">
-                <h2>Recently Updated Games</h2>
+                <h2>Game yang Baru Diperbarui</h2>
                 <div className="filter-box">
                     <details className="filter-details updatedgames">
                         <summary
