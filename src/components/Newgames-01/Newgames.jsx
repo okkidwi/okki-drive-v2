@@ -30,7 +30,7 @@ async function parseNewGameData() {
 
         return filteredGameData
     } catch (error) {
-        console.error('Error parsing game data:', error)
+        console.error('Kesalahan saat mengurai data game:', error)
         throw error
     }
 }
@@ -58,19 +58,19 @@ function Newgames() {
             setFilteredImages(data)
         } catch (error) {
             Swal.fire({
-                title: 'Error',
+                title: 'Kesalahan',
                 html: `
-                    <p>Error parsing game data, please close the app and open it again. If it still doesn't work, try a VPN.</p>
-                    <p>This is a list of countries and/or ISPs that are known to block access to fitgirl-repacks:</p>
+                    <p>Terjadi kesalahan saat mengurai data game, silakan tutup aplikasi dan buka lagi. Jika masih tidak berfungsi, coba gunakan VPN.</p>
+                    <p>Ini adalah daftar negara dan/atau ISP yang diketahui memblokir akses ke fitgirl-repacks:</p>
                     <ul>
-                        <li><strong>Italy</strong></li>
+                        <li><strong>Italia</strong></li>
                         <li><strong>Verizon</strong></li>
-                        <li><strong>Germany</strong> (<em>ALWAYS USE A VPN IN GERMANY !</em>)</li>
-                        <li><strong><em>Free Proton VPN may block P2P</em></strong></li>
+                        <li><strong>Jerman</strong> (<em>SELALU GUNAKAN VPN DI JERMAN !</em>)</li>
+                        <li><strong><em>VPN Proton Gratis Mungkin Memblokir P2P</em></strong></li>
                     </ul>
-                    <p>If you know any more countries or ISP that blocks fitgirls repack website or P2P, please contact us on Discord, link in the settings.</p>
+                    <p>Jika Anda mengetahui negara atau ISP lain yang memblokir situs web fitgirls repack atau P2P, silakan hubungi kami di Facebook atau Telegram, tautan di pengaturan.</p>
                 `,
-                footer: `Error: ${error}`,
+                footer: `Kesalahan: ${error}`,
                 icon: 'error',
                 confirmButtonText: 'Ok',
             })
@@ -126,7 +126,7 @@ function Newgames() {
     return (
         <>
             <div className="title-category newgames">
-                <h2>Newly Added Games</h2>
+                <h2>Game yang Baru Ditambahkan</h2>
                 <div className="filter-box">
                     <details className="filter-details newgames">
                         <summary
