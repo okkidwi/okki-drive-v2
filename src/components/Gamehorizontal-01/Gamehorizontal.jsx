@@ -520,11 +520,11 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
         const repackSizeMatch = description.match(/Ukuran Repack:\s*([^\n]+)/);
 
         return {
-            'Genre/Tag:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
-            Perusahaan: companiesMatch ? companiesMatch[1].trim() : 'N/A',
-            Bahasa: languageMatch ? languageMatch[1].trim() : 'N/A',
-            UkuranAsli: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
-            UkuranRepack: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
+            'Genre/Tags:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
+            Companies: companiesMatch ? companiesMatch[1].trim() : 'N/A',
+            Language: languageMatch ? languageMatch[1].trim() : 'N/A',
+            OriginalSize: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
+            RepackSize: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
         };
     }
 
