@@ -31,10 +31,10 @@ function Gamehub() {
 
         // Load settings at startup
         loadSettings().then((loadedSettings) => {
-            console.log("Gamehub: Loaded settings on startup:", loadedSettings);
+            console.log("Gamehub: Pengaturan dimuat saat memulai:", loadedSettings);
             setSettings(loadedSettings); // Update settings signal with loaded settings
         }).catch((error) => {
-            console.error("Gamehub: Error loading settings on startup:", error);
+            console.error("Gamehub: Kesalahan memuat pengaturan saat memulai:", error);
         });
 
         let gamehubDiv = document.querySelector('.gamehub-container');
@@ -65,30 +65,30 @@ function Gamehub() {
         const settingsPath = `${dirPath}/settings.json`; // Settings file path
 
         try {
-            console.log("Gamehub: Loading settings from:", settingsPath);
+            console.log("Gamehub: Memuat pengaturan dari:", settingsPath);
 
             // Check if the directory exists, and if not, create it
             const dirExists = await exists(dirPath);
             if (!dirExists) {
                 await createDir(dirPath, { recursive: true });
-                console.log("Gamehub: Created directory:", dirPath);
+                console.log("Gamehub: Direktori yang dibuat:", dirPath);
             }
 
             // Check if the settings file exists
             const fileExists = await exists(settingsPath);
             if (!fileExists) {
                 await writeTextFile(settingsPath, JSON.stringify(defaultSettings, null, 2));
-                console.log("Gamehub: Created settings file with default settings:", defaultSettings);
+                console.log("Gamehub: Membuat file pengaturan dengan pengaturan default:", defaultSettings);
                 return defaultSettings;
             } else {
-                console.log("Gamehub: Settings file exists:", settingsPath);
+                console.log("Gamehub: File pengaturan ada:", settingsPath);
             }
 
             // If the file exists, read and parse it
             const json = await readTextFile(settingsPath);
             return JSON.parse(json);
         } catch (error) {
-            console.error("Gamehub: Failed to load settings:", error);
+            console.error("Gamehub: Gagal memuat pengaturan:", error);
             return defaultSettings;
         }
     }
@@ -171,10 +171,10 @@ function Gamehub() {
 
     // Effect to manage the random background based on background_image_path_64
     createEffect(() => {
-        console.log("Gamehub: Checking if background_image_path_64 is set...");
+        console.log("Gamehub: Memeriksa apakah background_image_path_64 sudah diatur...");
 
         if (!settings().background_image_path_64) {
-            console.log('Gamehub: No custom background image found. Running randomImageFinder.');
+            console.log('Gamehub: Tidak ditemukan gambar latar belakang khusus. Menjalankan randomImageFinder.');
             try {
                 randomImageFinder();
             } catch (error) {
@@ -208,7 +208,7 @@ function Gamehub() {
                 clearTimeout(timeOut);
             });
         } else {
-            console.log('Gamehub: Custom background image found. Not applying random background.');
+            console.log('Gamehub: Gambar latar belakang kustom ditemukan. Tidak menerapkan latar belakang acak.');
         }
     });
 
