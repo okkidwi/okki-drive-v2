@@ -12,7 +12,7 @@ async function readFile(filePath) {
         const fileContent = await invoke('read_file', { filePath });
         return fileContent;
     } catch (error) {
-        console.error('Error reading file:', error);
+        console.error('Terjadi kesalahan saat membaca file:', error);
     }
 }
 
