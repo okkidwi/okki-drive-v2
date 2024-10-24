@@ -172,7 +172,7 @@ function Popularrepacks() {
     return (
         <>
             <div className="title-category poprepacks">
-                <h2>Repack Populer</h2>
+                <h2>Game Populer</h2>
                 <div className="filter-box">
                     <details
                         className="filter-details poprepacks"
