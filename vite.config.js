@@ -35,7 +35,7 @@ export default defineConfig(async () => ({
   build: {
     target: "esnext", // Modern JavaScript target for Tauri
     rollupOptions: {
-      external: ['solid-i18next'], // Externalize solid-i18next
+      external: ['i18next'], // Externalize i18next
     },
   },
 }));
