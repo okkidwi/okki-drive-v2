@@ -87,7 +87,7 @@ const ChangelogPopup = () => {
                         <li>Membuat muat ulang lebih cepat untuk mencegah masalah dari pengguna yang mengklik tombol "Simpan Pengaturan" terlalu sering</li>
                         <li>Mengganti kotak centang biasa dengan saklar untuk tampilan yang lebih modern dan memperbaiki desain pengaturan</li>
                         <li>Menyembunyikan gulir sidebar untuk desain yang lebih bersih</li>
-                        <li>Meningkatkan bilah kemajuan unduhan dengan penataan ikon yang lebih baik</li>
+                        <li>Meningkatkan bilah progress unduhan dengan penataan ikon yang lebih baik</li>
                         <li>Menyatukan set ikon aplikasi menjadi Lucid Icons untuk penampilan yang konsisten</li>
                         <li>Menegakkan penggunaan fontsource NPM untuk font, melarang perubahan langsung pada font-family aplikasi</li>
                         <li>Mengatur ulang CSS slider ke file khusus untuk pemeliharaan yang lebih baik</li>
