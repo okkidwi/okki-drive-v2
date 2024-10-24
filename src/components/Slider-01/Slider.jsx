@@ -17,15 +17,15 @@ const Slider = (props) => {
 
   function cutTheDescription(description) {
     if (!description) {
-      return { repackDescription: 'Description not available', officialDescription: 'Description not available' };
+      return { repackDescription: 'Deskripsi tidak tersedia', officialDescription: 'Deskripsi tidak tersedia' };
     }
 
-    const repackIndex = description.indexOf('Repack Features');
-    const gameDescriptionIndex = description.indexOf('\nGame Description\n');
+    const repackIndex = description.indexOf('Fitur Repack');
+    const gameDescriptionIndex = description.indexOf('\nDeskripsi Game\n');
 
     if (repackIndex !== -1 && gameDescriptionIndex !== -1) {
       const repackDescription = description.substring(repackIndex, gameDescriptionIndex).trim();
-      const officialDescription = description.substring(gameDescriptionIndex + '\nGame Description\n'.length).trim();
+      const officialDescription = description.substring(gameDescriptionIndex + '\nDeskripsi Game\n'.length).trim();
       return { repackDescription, officialDescription };
     } else {
       return { repackDescription: description.trim(), officialDescription: '' };
@@ -138,7 +138,7 @@ const Slider = (props) => {
             // If no description, skip processing
             const { repackDescription, officialDescription } = slide.desc
               ? cutTheDescription(slide.desc)
-              : { repackDescription: 'Description not available', officialDescription: '' };
+              : { repackDescription: 'Deskripsi tidak tersedia', officialDescription: '' };
 
             const details = slide.desc
               ? extractDetails(slide.desc)
