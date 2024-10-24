@@ -73,15 +73,15 @@ mod checklist_automation {
             chkbx_to_check.iter().for_each(|chkbx| {
                 if spec_text_inside.contains(chkbx) {
                     match el.send_keys(" ", 0) {
-                        Ok(_) => info!("Space key sent to element."),
-                        Err(e) => error!("Failed to send space key: {:?}", e),
+                        Ok(_) => info!("Tombol spasi dikirim ke elemen."),
+                        Err(e) => error!("Gagal mengirim tombol spasi: {:?}", e),
                     }
                     match el.send_keys(" ", 0) {
-                        Ok(_) => info!("Space key sent to element."),
-                        Err(e) => error!("Failed to send space key: {:?}", e),
+                        Ok(_) => info!("Tombol spasi dikirim ke elemen."),
+                        Err(e) => error!("Gagal mengirim tombol spasi: {:?}", e),
                     }
                 } else {
-                    warn!("skipped : {:#?}", spec_text_inside);
+                    warn!("dilewati : {:#?}", spec_text_inside);
                 }
             });
         }
@@ -104,14 +104,14 @@ pub mod windows_ui_automation {
     pub async fn start_executable<P: AsRef<Path> + std::convert::AsRef<std::ffi::OsStr>>(path: P) {
         match Command::new(path).spawn() {
             Ok(child) => {
-                info!("Executable started with PID: {}", child.id());
+                info!("Executable dimulai dengan PID: {}", child.id());
             }
             Err(e) => {
-                error!("Failed to start executable: {}", e);
+                error!("Gagal memulai executable: {}", e);
 
                 // Optionally, you might want to check if the file is being used
                 if e.raw_os_error() == Some(32) {
-                    error!(" Some Other Process is Creeping on him.")
+                    error!(" Ada Proses Lain yang Mengintainya.")
                 }
             }
         }
@@ -132,13 +132,13 @@ pub mod windows_ui_automation {
 
             match Command::new(&path).arg(args).spawn() {
                 Ok(child) => {
-                    info!("Executable started with PID: {}", child.id());
+                    info!("Executable dimulai dengan PID: {}", child.id());
                 }
                 Err(e) => {
-                    error!("Failed to start executable: {}", e);
+                    error!("Gagal memulai executable: {}", e);
 
                     if let Some(32) = e.raw_os_error() {
-                        error!("Another process is using the executable.");
+                        error!("Proses lainnya menggunakan executable.");
                     }
                 }
             }
@@ -223,13 +223,13 @@ pub mod executable_custom_commands {
         #[cfg(target_os = "windows")]
         match Command::new(&path).spawn() {
             Ok(child) => {
-                info!("Executable started with PID: {}", child.id());
+                info!("Executable dimulai dengan PID: {}", child.id());
             }
             Err(e) => {
-                error!("Failed to start executable: {}", e);
+                error!("Gagal memulai executable: {}", e);
 
                 if let Some(32) = e.raw_os_error() {
-                    error!("Another process is using the executable.");
+                    error!("Proses lainnya menggunakan executable.");
                 }
             }
         }
