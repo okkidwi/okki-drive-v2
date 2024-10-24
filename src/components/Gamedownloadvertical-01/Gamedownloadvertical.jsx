@@ -532,7 +532,7 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                                 {peerStats().live}
                             </p>
                             <p>
-                                <strong>Menghubungkan Peer:</strong>{' '}
+                                <strong>Peer Terhubung:</strong>{' '}
                                 {peerStats().connecting}
                             </p>
                             <p>
