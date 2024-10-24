@@ -83,7 +83,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, lanjutkan lagi!',
-                    cancelButtonText: 'Batalkan'
+                    cancelButtonText: 'Batal'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         startDownloadProcess();
@@ -96,7 +96,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     icon: "error",
                     showCancelButton: true,
                     confirmButtonText: 'Hapus Unduhan Saat Ini',
-                    cancelButtonText: 'Batalkan'
+                    cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
@@ -106,7 +106,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Ya, hapus saja!',
-                            cancelButtonText: 'Batalkan',
+                            cancelButtonText: 'Batal',
                             didRender: () => {
                                 let CTG = localStorage.getItem('CTG');
                                 let hash = JSON.parse(CTG).torrent_idx;
