@@ -34,11 +34,11 @@ const Slider = (props) => {
 
   function extractDetails(description) {
     if (!description) return {
-      'Genre/Tags:': 'N/A',
-      Companies: 'N/A',
-      Language: 'N/A',
-      OriginalSize: 'N/A',
-      RepackSize: 'N/A',
+      'Genre/Tag:': 'N/A',
+      Perusahaan: 'N/A',
+      Bahasa: 'N/A',
+      UkuranOriginal: 'N/A',
+      UkuranRepack: 'N/A',
     };
 
     let genresTagsMatch = description.match(/Genres\/Tags:\s*([^\n]+)/);
@@ -51,11 +51,11 @@ const Slider = (props) => {
     const repackSizeMatch = description.match(/Repack Size:\s*([^\n]+)/);
 
     return {
-      'Genre/Tags:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
-      Companies: companiesMatch ? companiesMatch[1].trim() : 'N/A',
-      Language: languageMatch ? languageMatch[1].trim() : 'N/A',
-      OriginalSize: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
-      RepackSize: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
+      'Genre/Tag:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
+      Perusahaan: companiesMatch ? companiesMatch[1].trim() : 'N/A',
+      Bahasa: languageMatch ? languageMatch[1].trim() : 'N/A',
+      UkuranOriginal: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
+      UkuranRepack: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
     };
   }
 
@@ -143,11 +143,11 @@ const Slider = (props) => {
             const details = slide.desc
               ? extractDetails(slide.desc)
               : {
-                'Genre/Tags:': 'N/A',
-                Companies: 'N/A',
-                Language: 'N/A',
-                OriginalSize: 'N/A',
-                RepackSize: 'N/A',
+                'Genre/Tag:': 'N/A',
+                Perusahaan: 'N/A',
+                Bahasa: 'N/A',
+                UkuranOriginal: 'N/A',
+                UkuranRepack: 'N/A',
               };
 
             return (
@@ -157,11 +157,11 @@ const Slider = (props) => {
                       class="hover-title"
                     >
                       <div class="title">{slide.title}</div>
-                      <div class="detail"><strong>Genres/Tags:</strong> {details['Genre/Tags:']}</div>
-                      <div class="detail"><strong>Company:</strong> {details.Companies}</div>
-                      <div class="detail"><strong>Language:</strong> {details.Language}</div>
-                      <div class="detail"><strong>Original Size:</strong> {details.OriginalSize}</div>
-                      <div class="detail"><strong>Repack Size:</strong> {details.RepackSize}</div>
+                      <div class="detail"><strong>Genres/Tag:</strong> {details['Genre/Tags:']}</div>
+                      <div class="detail"><strong>Perusahaan:</strong> {details.Companies}</div>
+                      <div class="detail"><strong>Bahasa:</strong> {details.Language}</div>
+                      <div class="detail"><strong>Ukuran Original:</strong> {details.OriginalSize}</div>
+                      <div class="detail"><strong>Ukuran Repack:</strong> {details.RepackSize}</div>
                     </div>
                   )
               }>
