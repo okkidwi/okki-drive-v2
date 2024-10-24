@@ -57,11 +57,11 @@ function Mylibrary() {
                 gameData = JSON.parse(fileContentObj.content);
             } catch (error) {
                 if (error.message.includes("ENOENT")) {
-                    console.log("Empty Array")
+                    console.log("Array Kosong")
                     // If file doesn't exist, initialize it with an empty array
                     gameData = [];
                 } else {
-                    console.error("Failed to read downloaded_games.json:", error);
+                    console.error("Gagal membaca downloading_games.json:", error);
                     return;
                 }
             }
@@ -78,9 +78,9 @@ function Mylibrary() {
             try {
                 await writeFile(filePath, JSON.stringify(gameData, null, 2));
                 setAddedGame(gameData);
-                console.log("Game successfully added:", gameInfo.title);
+                console.log("Game berhasil ditambahkan:", gameInfo.title);
             } catch (error) {
-                console.error("Failed to write to downloaded_games.json:", error);
+                console.error("Gagal menulis ke downloading_games.json:", error);
             }
         }
     }
@@ -112,7 +112,7 @@ function Mylibrary() {
                         postURLs.push(loc);
                     }
                 } else {
-                    console.error('Failed to fetch sitemap:', response.statusText);
+                    console.error('Gagal mengambil sitemap:', response.statusText);
                 }
             }
 
@@ -123,7 +123,7 @@ function Mylibrary() {
 
             setSearchResults(results.slice(0, 5));
         } catch (error) {
-            console.error('Failed to fetch sitemap data:', error);
+            console.error('Gagal mengambil data sitemap:', error);
         }
     }
 
@@ -175,26 +175,26 @@ function Mylibrary() {
 
     async function handleAddDownloadedGames() {
         Swal.fire({
-            title: 'Add a game?',
+            title: 'Tambahkan game?',
             html: `
                 <input
                     type="text"
                     id="search-bar"
                     class="swal2-input"
-                    placeholder="Search for a game..."
+                    placeholder="Cari game..."
                     autocomplete="off"
                 />
                 <div id="search-results-box" class="swal2-results-box"></div>
             `,
             showCancelButton: true,
-            confirmButtonText: 'Select',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Pilih',
+            cancelButtonText: 'Batal',
             preConfirm: () => {
                 const selectedResult = document.querySelector('.swal2-selected-result');
                 if (selectedResult) {
                     return selectedResult.getAttribute('data-url');
                 } else {
-                    Swal.showValidationMessage('Please select a game.');
+                    Swal.showValidationMessage('Silakan pilih game.');
                     return false;
                 }
             },
@@ -256,9 +256,9 @@ function Mylibrary() {
             // Step 3: Write the updated JSON back to the file
             const updatedJsonString = JSON.stringify(gameData, null, 2);
             await writeFile(filePath, updatedJsonString);
-            console.log('Game path successfully updated and saved!');
+            console.log('Jalur game berhasil diperbarui dan disimpan!');
         } catch (error) {
-            console.error('Error updating game path:', error);
+            console.error('Terjadi kesalahan saat memperbarui jalur game:', error);
         }
     }
 
@@ -313,12 +313,12 @@ function Mylibrary() {
         const game = selectedGame();
         if (game) {
             const result = await Swal.fire({
-                title: `Remove ${game.title}?`,
-                html: "This action cannot be undone!<br><strong>THIS WILL NOT DELETE THE FILES!</strong>",
+                title: `Hapus ${game.title}?`,
+                html: "Tindakan ini tidak dapat dibatalkan!<br><strong>INI TIDAK AKAN MENGHAPUS FILE!</strong>",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, remove it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: 'Ya, hapus itu!',
+                cancelButtonText: 'Batal'
             });            
     
             if (result.isConfirmed) {
@@ -327,10 +327,10 @@ function Mylibrary() {
                     setGameContextMenuVisible(false);
                     console.log(`Game ${game.title} removed`);
                 } catch (error) {
-                    console.error("Error during game removal:", error);
+                    console.error("Kesalahan saat menghapus game:", error);
                     Swal.fire({
-                        title: 'Error',
-                        text: 'Failed to remove the game. Please try again.',
+                        title: 'Kesalahan',
+                        text: 'Gagal menghapus game. Silakan coba lagi.',
                         icon: 'error',
                     });
                 }
@@ -349,7 +349,7 @@ function Mylibrary() {
             await writeFile(filePath, JSON.stringify(gameData, null, 2));
             setRemovedGame(gameData);
         } catch (error) {
-            throw new Error(`Failed to update downloaded_games.json: ${error.message}`);
+            throw new Error(`Gagal memperbarui downloading_games.json: ${error.message}`);
         }
     }
 
@@ -379,7 +379,7 @@ function Mylibrary() {
             const gameData = JSON.parse(fileContent.content);
             setDownloadedGamesList(gameData);
         } catch (error) {
-            console.error("Error parsing game data:", error);
+            console.error("Terjadi kesalahan saat mengurai data game:", error);
             throw error;
         }
     })
@@ -407,7 +407,7 @@ function Mylibrary() {
             const dirExists = await exists(dirPath);
             if (!dirExists) {
               await createDir(dirPath, { recursive: true });
-              console.log("Directory created:", dirPath);
+              console.log("Direktori dibuat:", dirPath);
             }
         
             // Check if the settings file exists
@@ -415,12 +415,12 @@ function Mylibrary() {
             if (!fileExists) {
               // If the file does not exist, create it with default settings
               await writeTextFile(filePath, JSON.stringify(gameData, null, 2));
-              console.log("Settings file created with default settings.");
+              console.log("File pengaturan dibuat dengan pengaturan default.");
               return gameData;
             }
         
           } catch (error) {
-            console.error("Failed to load settings:", error);
+            console.error("Gagal memuat pengaturan:", error);
             return filePath;
           }
     })
@@ -432,11 +432,11 @@ function Mylibrary() {
 
                     {backgroundMainBrightness() === "dark" ? (
                             <div class="game-container-title">
-                                <h1 className="title-category-element light">My Library</h1>
+                                <h1 className="title-category-element light">Library</h1>
                             </div>
                         ) : (
                             <div class="game-container-title">
-                              <h1 className="title-category-element dark">My Library</h1>
+                              <h1 className="title-category-element dark">Library</h1>
                             </div>
                         )
                     }
@@ -465,12 +465,12 @@ function Mylibrary() {
                                     } else {
                                         let correctTitle = game.title.replace(/\s*\+.*$/, '');
                                         Swal.fire({
-                                            title: `Launch ${correctTitle}`,
-                                            text: `Do you want to launch the game ${correctTitle}?`,
+                                            title: `Luncurkan ${correctTitle}`,
+                                            text: `Apakah Anda ingin meluncurkan game ${correctTitle}?`,
                                             icon: 'info',
                                             showCancelButton: true,
-                                            confirmButtonText: 'Yes, launch it!',
-                                            cancelButtonText: 'Cancel'
+                                            confirmButtonText: 'Ya, luncurkan itu!',
+                                            cancelButtonText: 'Batal'
                                         }).then(async (result) => {
                                             if (result.isConfirmed) {
                                                 await invoke('start_executable', { path: game.path });
