@@ -178,11 +178,11 @@ function Gameverticaldownloadslide({ isActive, setIsActive }) {
                     return 'Tidak aktif'
                 }
                 switch (state) {
-                    case 'dijeda':
+                    case 'paused':
                         return 'Melanjutkan'
                     case 'live':
                         return 'Jeda'
-                    case 'menginisialisasi':
+                    case 'initializing':
                         return 'Memuat...'
                     default:
                         return 'State tidak diketahui'
