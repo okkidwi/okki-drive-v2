@@ -187,7 +187,7 @@ function Searchbar() {
             </div>
             <div id="search-results" className="search-results">
                 {searchResults().length === 0 ? (
-                    <p>No results found.</p>
+                    <p>Pencarian tidak ditemukan.</p>
                 ) : (
                     <ul>
                         {searchResults().map((result, index) => (
