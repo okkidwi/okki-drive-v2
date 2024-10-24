@@ -129,14 +129,14 @@ async fn fetch_and_process_href(client: &Client, href: &str) -> Result<Vec<Strin
 
     for noscript in href_document
         .select("noscript")
-        .map_err(|_| anyhow::anyhow!("Failed to select noscript element"))?
+        .map_err(|_| anyhow::anyhow!("Gagal memilih elemen noscript"))?
     {
         let inner_noscript_html = noscript.text_contents();
         let inner_noscript_document = kuchiki::parse_html().one(inner_noscript_html);
 
         for img_elem in inner_noscript_document
             .select("div.big-image > a > img")
-            .map_err(|_| anyhow::anyhow!("Failed to select image element"))?
+            .map_err(|_| anyhow::anyhow!("Gagal memilih elemen gambar"))?
         {
             if let Some(src) = img_elem.attributes.borrow().get("src") {
                 image_srcs.push(src.to_string());
@@ -148,7 +148,7 @@ async fn fetch_and_process_href(client: &Client, href: &str) -> Result<Vec<Strin
 
 async fn scrape_image_srcs(url: &str) -> Result<Vec<String>> {
     if STOP_FLAG.load(Ordering::Relaxed) {
-        return Err(anyhow::anyhow!("Cancelled the Event..."));
+        return Err(anyhow::anyhow!("Membatalkan Event..."));
     }
 
     let client = Client::new();
@@ -171,7 +171,7 @@ async fn scrape_image_srcs(url: &str) -> Result<Vec<String>> {
         .map(|res| match res {
             Ok(Ok(images)) => Ok(images), // Successful fetch within timeout
             Ok(Err(e)) => Err(e),         // Fetch failed but within the timeout
-            Err(_) => Err(anyhow::anyhow!("Timeout occurred")), // Timeout error
+            Err(_) => Err(anyhow::anyhow!("Waktu habis telah terjadi")), // Timeout error
         })
         .collect();
 
@@ -180,7 +180,7 @@ async fn scrape_image_srcs(url: &str) -> Result<Vec<String>> {
     for result in results {
         match result {
             Ok(images) => image_srcs.extend(images), // Add images if successful
-            Err(e) => tracing::error!("Error fetching images: {:?}", e), // Log the error, but continue
+            Err(e) => tracing::error!("Terjadi kesalahan saat mengambil gambar: {:?}", e), // Log the error, but continue
         }
     }
 
@@ -248,7 +248,7 @@ async fn get_games_images(
         })?;
     tokio::fs::write(&cache_file_path, updated_cache_data).await?;
 
-    info!("Time elapsed to find images : {:#?}", now.elapsed());
+    info!("Waktu yang berlalu untuk menemukan gambar: {:#?}", now.elapsed());
 
     Ok(GameImages {
         my_all_images: image_srcs,
@@ -347,14 +347,14 @@ fn check_folder_path(path: String) -> Result<bool, bool> {
     let path_obj = PathBuf::from(&path);
 
     // Debugging information
-    info!("Checking path: {:?}", path_obj);
+    info!("Memeriksa jalur: {:?}", path_obj);
 
     if !path_obj.exists() {
-        warn!("Path does not exist.");
+        warn!("Jalur tidak ada.");
         return Ok(false);
     }
     if !path_obj.is_dir() {
-        warn!("Path is not a directory.");
+        warn!("Path bukan direktori.");
         return Ok(false);
     }
     info!("Path is valid.");
@@ -366,7 +366,7 @@ fn delete_invalid_json_files(app_handle: &tauri::AppHandle) -> Result<(), Box<dy
     dir_path.push("tempGames");
 
     if !dir_path.exists() {
-        info!("Directory does not exist: {:?}", dir_path);
+        info!("Direktori tidak ada: {:?}", dir_path);
         return Err(Box::new(std::io::Error::new(
             std::io::ErrorKind::NotFound,
             "Directory not found",
@@ -381,7 +381,7 @@ fn delete_invalid_json_files(app_handle: &tauri::AppHandle) -> Result<(), Box<dy
         // Only process JSON files
         if path.extension().and_then(|s| s.to_str()) == Some("json") {
             if let Err(e) = check_file_for_tags(&path) {
-                error!("Error processing file {:?}: {}", path, e);
+                error!("Terjadi kesalahan saat memproses file {:?}: {}", path, e);
             }
         }
     }
@@ -402,7 +402,7 @@ fn check_file_for_tags(path: &Path) -> Result<()> {
         for obj in arr {
             // Each object should contain the "tag" key
             if obj.get("tag").is_none() {
-                warn!("Missing 'tag' key in file: {:?}, rebuilding...", path);
+                warn!("Kunci 'tag' hilang dalam file: {:?}, sedang dibangun kembali...", path);
                 fs::remove_file(path)?;
             }
         }
@@ -427,7 +427,7 @@ fn setup_logging(logs_dir: PathBuf) -> WorkerGuard {
 // Function to perform a network request after ensuring frontend is ready, and emit network-failure if the request fails
 async fn perform_network_request(app_handle: tauri::AppHandle) {
     info!(
-        "perform_network_request: Waiting for frontend-ready before starting the network request."
+        "perform_network_request: Menunggu frontend siap sebelum memulai permintaan jaringan."
     );
 
     // Get the main window to listen for 'frontend-ready'
@@ -437,7 +437,7 @@ async fn perform_network_request(app_handle: tauri::AppHandle) {
 
         // Listen for 'frontend-ready' before performing the network request
         main_window.listen("frontend-ready", move |_| {
-            info!("Frontend is ready, starting the network request...");
+            info!("Frontend sudah siap, memulai permintaan jaringan...");
 
             // Clone `app_handle_clone` for use in the async block
             let app_handle_inner_clone = app_handle_clone.clone();
@@ -452,15 +452,15 @@ async fn perform_network_request(app_handle: tauri::AppHandle) {
                     Ok(resp) => {
                         let _text = resp.text().await.unwrap();
                         info!(
-                            "perform_network_request: Network request to Fitgirl website was successful."
+                            "perform_network_request: Permintaan jaringan ke situs web Fitgirl berhasil."
                         );
                     }
                     Err(_) => {
-                        info!("Network request failed, emitting network-failure event.");
+                        info!("Permintaan jaringan gagal, memancarkan peristiwa kegagalan jaringan.");
 
                         // Emit the network-failure event after the network request fails
                         let failure_message = Payload {
-                            message: "There was a network issue, unable to retrieve latest game data. (E01)".to_string(),
+                            message: "Terjadi masalah jaringan, tidak dapat mengambil data game terkini. (E01)".to_string(),
                         };
                         app_handle_inner_clone
                             .emit_all("network-failure", failure_message)
@@ -474,14 +474,14 @@ async fn perform_network_request(app_handle: tauri::AppHandle) {
 
 #[tauri::command]
 fn analyze_image_lightness(image_url: String) -> Result<String, String> {
-    let response = get(&image_url).map_err(|err| format!("Failed to fetch image: {}", err))?;
+    let response = get(&image_url).map_err(|err| format!("Gagal mengambil gambar: {}", err))?;
     let bytes = response
         .bytes()
-        .map_err(|err| format!("Failed to read image bytes: {}", err))?;
+        .map_err(|err| format!("Gagal membaca byte gambar: {}", err))?;
 
     // Load image from bytes
     let img = image::load_from_memory(&bytes)
-        .map_err(|err| format!("Failed to decode image: {}", err))?;
+        .map_err(|err| format!("Gagal mendekode gambar: {}", err))?;
 
     let (width, height) = img.dimensions();
 
@@ -517,7 +517,7 @@ fn analyze_image_lightness(image_url: String) -> Result<String, String> {
 
 fn main() -> Result<(), Box<dyn Error>> {
     info!(
-        "{}: Main.rs: Starting the application...",
+        "{}: Main.rs: Memulai aplikasi...",
         Utc::now().format("%a,%b,%e,%T,%Y")
     );
     let image_cache = Arc::new(Mutex::new(LruCache::<String, Vec<String>>::new(
@@ -543,7 +543,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             // Delete JSON files missing the 'tag' field or corrupted and log the process
             if let Err(e) = delete_invalid_json_files(&current_app_handle) {
                 eprintln!(
-                    "Error during deletion of invalid or corrupted JSON files: {}",
+                    "Kesalahan saat menghapus file JSON yang tidak valid atau rusak: {}",
                     e
                 );
             }
@@ -561,18 +561,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             // Perform asynchronous initialization tasks without blocking the main thread
             tauri::async_runtime::spawn(async move {
-                tracing::info!("Starting async tasks");
+                tracing::info!("Memulai tugas async");
 
                 let mandatory_tasks_online = tauri::async_runtime::spawn_blocking(move || {
                     // Clone before emitting to avoid moving the handle
                     let first_app_handle_clone = first_app_handle.clone();
                     if let Err(e) = basic_scraping::scraping_func(first_app_handle_clone.clone()) {
-                        eprintln!("Error in scraping_func: {}", e);
-                        tracing::info!("Error in scraping_func: {}", e);
+                        eprintln!("Kesalahan dalam scraping_func: {}", e);
+                        tracing::info!("Kesalahan dalam scraping_func: {}", e);
                         // Do not exit, continue running
                     } else {
                         tracing::info!(
-                            "[scraping_func] has been completed. No errors are reported."
+                            "[scraping_func] telah selesai. Tidak ada kesalahan yang dilaporkan."
                         );
                         //TODO: This will be used to emit a signal to the frontend that the scraping is complete and for all other app_handle.
                         // when the main reload window code is removed
@@ -586,12 +586,12 @@ fn main() -> Result<(), Box<dyn Error>> {
                             second_app_handle_clone.clone()
                         )
                     {
-                        eprintln!("Error in popular_games_scraping_func: {}", e);
-                        tracing::info!("Error in popular_games_scraping_func: {}", e);
+                        eprintln!("Kesalahan dalam popular_games_scraping_func: {}", e);
+                        tracing::info!("Kesalahan dalam popular_games_scraping_func: {}", e);
                         // Do not exit, continue running
                     } else {
                         tracing::info!(
-                            "[popular_games_scraping_func] has been completed. No errors are reported."
+                            "[popular_games_scraping_func] telah selesai. Tidak ada kesalahan yang dilaporkan."
                         );
                         // when the main reload window code is removed
                         second_app_handle_clone.emit_all("popular-games-ready", {}).unwrap();
@@ -604,12 +604,12 @@ fn main() -> Result<(), Box<dyn Error>> {
                             third_app_handle_clone.clone()
                         )
                     {
-                        eprintln!("Error in recently_updated_games_scraping_func: {}", e);
-                        tracing::info!("Error in recently_updated_games_scraping_func: {}", e);
+                        eprintln!("Kesalahan dalam recently_updated_games_scraping_func: {}", e);
+                        tracing::info!("Kesalahan dalam recently_updated_games_scraping_func: {}", e);
                         // Do not exit, continue running
                     } else {
                         tracing::info!(
-                            "[recently_updated_games_scraping_func] has been completed. No errors are reported."
+                            "[recently_updated_games_scraping_func] telah selesai. Tidak ada kesalahan yang dilaporkan."
                         );
                         // when the main reload window code is removed
                         third_app_handle_clone.emit_all("recent-updated-games-ready", {}).unwrap();
@@ -622,12 +622,12 @@ fn main() -> Result<(), Box<dyn Error>> {
                             fourth_app_handle_clone.clone()
                         )
                     {
-                        eprintln!("Error in get_sitemaps_website: {}", e);
-                        tracing::info!("Error in get_sitemaps_website: {}", e);
+                        eprintln!("Kesalahan dalam get_sitemaps_website: {}", e);
+                        tracing::info!("Kesalahan dalam get_sitemaps_website: {}", e);
                         // Do not exit, continue running
                     } else {
                         tracing::info!(
-                            "[get_sitemaps_website] has been completed. No errors are reported."
+                            "[get_sitemaps_website] telah selesai. Tidak ada kesalahan yang dilaporkan."
                         );
                         // when the main reload window code is removed
                         fourth_app_handle_clone.emit_all("sitemaps-ready", {}).unwrap();
@@ -636,18 +636,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
                 // Await the completion of the tasks
                 if let Err(e) = mandatory_tasks_online.await {
-                    eprintln!("An error occurred during scraping tasks: {:?}", e);
-                    tracing::info!("An error occurred during scraping tasks: {:?}", e);
+                    eprintln!("Terjadi kesalahan selama scraping tasks: {:?}", e);
+                    tracing::info!("Terjadi kesalahan selama during scraping tasks: {:?}", e);
                     match scraping_failed_event.emit_all("scraping_failed_event", "Test") {
                         Ok(()) => (),
                         Err(e) => {
-                            error!("Error During Scraping Event, Test Payload : {}", e)
+                            error!("Kesalahan Selama Event Scraping, Uji Muatan : {}", e)
                         }
                     } //TODO 
                     // Do not exit, continue running
                 } else {
                     tracing::info!(
-                        "All scraping tasks have been completed. No errors are reported."
+                        "Semua tugas scraping telah selesai. Tidak ada kesalahan yang dilaporkan."
                     );
                 }
 
@@ -665,7 +665,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     .unwrap()
                     .eval("window.location.reload();") 
                     .unwrap();
-                info!("Scraping signal has been sent.");
+                info!("Scraping sinyal telah dikirim");
             });
 
             Ok(())
@@ -693,7 +693,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .manage(image_cache) // Make the cache available to commands
         .manage(torrent_calls::TorrentState::default()) // Make the torrent state session available to commands
         .build(tauri::generate_context!())
-        .expect("error while building tauri application")
+        .expect("kesalahan saat membangun aplikasi tauri")
         .run(|_app_handle, event| {
             if let tauri::RunEvent::ExitRequested { .. } = event {
                 PAUSE_FLAG.store(true, Ordering::Relaxed);
