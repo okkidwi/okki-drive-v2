@@ -71,19 +71,19 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
         if (currentCDG) {
             if (currentCDG[0].gameMagnet === cdgGameMagnet && currentCDGStats.state !== "paused" && currentCDGStats.state) {
                 Swal.fire({
-                    title: "Information",
-                    text: "This game is already downloading.",
+                    title: "Informasi",
+                    text: "Game ini sudah diunduh.",
                     icon: "info"
                 });
                 return;
             } else if (currentCDG[0].gameMagnet === cdgGameMagnet && (!currentCDGStats.state || currentCDGStats.state === "paused")) {
                 Swal.fire({
-                    title: 'Resume your download?',
-                    text: "Do you want to resume the current download?",
+                    title: 'Lanjutkan unduhan Anda?',
+                    text: "Apakah Anda ingin melanjutkan unduhan saat ini??",
                     icon: 'info',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, resume it!',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: 'Ya, lanjutkan lagi!',
+                    cancelButtonText: 'Batal'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         startDownloadProcess();
@@ -91,7 +91,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                 });
             } else {
                 Swal.fire({
-                    title: "Error",
+                    title: "Kesalahan",
                     text: "A different game is already downloading.",
                     icon: "error",
                     showCancelButton: true,
