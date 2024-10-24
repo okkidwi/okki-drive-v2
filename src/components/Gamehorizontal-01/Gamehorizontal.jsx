@@ -83,7 +83,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     icon: 'info',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, lanjutkan lagi!',
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: 'Batalkan'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         startDownloadProcess();
@@ -92,21 +92,21 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
             } else {
                 Swal.fire({
                     title: "Kesalahan",
-                    text: "A different game is already downloading.",
+                    text: "Game lain sedang diunduh.",
                     icon: "error",
                     showCancelButton: true,
-                    confirmButtonText: 'Delete Current Download',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: 'Hapus Unduhan Saat Ini',
+                    cancelButtonText: 'Batalkan'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Are you sure?',
-                            text: "Do you really want to delete the current download? It will stop the current download but won't delete the files so you can still start it later.",
-                            footer: 'You can also delete the files directly by clicking on this button <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
+                            title: 'Apa Anda yakin?',
+                            text: "Apakah Anda benar-benar ingin menghapus unduhan saat ini? Tindakan ini akan menghentikan unduhan saat ini tetapi tidak akan menghapus file sehingga Anda masih dapat memulainya nanti.",
+                            footer: 'Anda juga dapat menghapus file secara langsung dengan mengklik tombol ini <button id="delete-files-btn" class="swal2-styled" style="background-color: red; color: white;">Delete Files</button>!',
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonText: 'Yes, delete it!',
-                            cancelButtonText: 'Cancel',
+                            confirmButtonText: 'Ya, hapus saja!',
+                            cancelButtonText: 'Batalkan',
                             didRender: () => {
                                 let CTG = localStorage.getItem('CTG');
                                 let hash = JSON.parse(CTG).torrent_idx;
@@ -118,8 +118,8 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                         try {
                                             await invoke('api_delete_torrent', { torrentIdx: hash });
                                             Swal.fire({
-                                                title: "Deleted",
-                                                text: "The files of the current download have been deleted.",
+                                                title: "Dihapus",
+                                                text: "File unduhan saat ini telah dihapus.",
                                                 icon: "success"
                                             }).then(()=> {
                                                 localStorage.removeItem('CTG');
@@ -127,9 +127,9 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                             });
                                         } catch (error) {
                                             Swal.fire({
-                                                title: "Error Deleting Files",
-                                                text: `An error occurred while deleting the files: ${error}`,
-                                                footer: "If you do not understand the error, please contact us on Discord before opening any issues on GitHub.",
+                                                title: "Kesalahan Saat Menghapus File",
+                                                text: `Terjadi kesalahan saat menghapus file: ${error}`,
+                                                footer: "Jika Anda tidak memahami kesalahannya, silakan hubungi kami di Facebook atau Telegram.",
                                                 icon: 'error'
                                             });
                                         }
@@ -144,8 +144,8 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             if (result.isConfirmed) {
                                 localStorage.removeItem('CDG');
                                 Swal.fire({
-                                    title: "Deleted",
-                                    text: "The current download has been deleted.",
+                                    title: "Dihapus",
+                                    text: "Unduhan saat ini telah dihapus.",
                                     icon: "success"
                                 }).then(() => {
                                     startDownloadProcess();
@@ -162,13 +162,13 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
     
         async function startDownloadProcess() {
             const pathResult = await Swal.fire({
-                title: 'Where do you want to download this game?',
+                title: 'Dimana Anda ingin mengunduh game ini??',
                 icon: 'question',
                 html: 
                     `<input type="text" id="gamePathInput" class="swal2-input" placeholder="Game Path">
-                     <button id="selectPathButton" class="swal2-confirm swal2-styled">Select Path</button>`,
+                     <button id="selectPathButton" class="swal2-confirm swal2-styled">Pilih Jalur</button>`,
                 showCancelButton: true,
-                confirmButtonText: 'Download!',
+                confirmButtonText: 'Unduh!',
                 didOpen: () => {
                     if (lastInputPath) {
                         document.getElementById('gamePathInput').value = lastInputPath;
@@ -210,14 +210,14 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                 magnetLink: cdgGameMagnet,
                             });
                             
-                            console.log("File list:", fileList);
+                            console.log("Daftar file:", fileList);
                             
                             let correctFileList = JSON.stringify(fileList)
                             if (!correctFileList) {
                         
                                 Swal.fire({
-                                    title: "Error Starting The Download!",
-                                    text: "An issue arised probably due to an incorrect magnetlink.",
+                                    title: "Kesalahan Saat Memulai Pengunduhan!",
+                                    text: "Masalah mungkin muncul karena tautan magnet yang salah.",
                                     icon: "error"
                                 })
                                 return;
@@ -227,12 +227,12 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             // Add the new checkboxes here
                             const externalCheckboxesHtml = `
                                 <div>
-                                    <input type="checkbox" id="downloadDirectX" value="Download DirectX">
-                                    <label for="downloadDirectX">Download DirectX</label>
+                                    <input type="checkbox" id="downloadDirectX" value="Unduh DirectX">
+                                    <label for="downloadDirectX">Unduh DirectX</label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="downloadMSCpp" value="Download Microsoft C++">
-                                    <label for="downloadMSCpp">Download Microsoft C++</label>
+                                    <input type="checkbox" id="downloadMSCpp" value="Unduh Microsoft C++">
+                                    <label for="downloadMSCpp">Unduh Microsoft C++</label>
                                 </div>
                             `;
         
@@ -272,7 +272,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                         ${dividerHtml}
                                         ${fileCheckboxes}
                                     </form>`,
-                                confirmButtonText: 'Download Selected Files',
+                                confirmButtonText: 'Unduh File Pilihan',
                                 showCancelButton: true,
                                 preConfirm: () => {
                                     const form = document.getElementById('fileSelectionForm');
@@ -302,19 +302,19 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                     .map(checkbox => parseInt(checkbox.value, 10)) // Convert strings to numbers
                                     .filter(value => !isNaN(value)); // Ensure NaN values are filtered out
                             
-                                    console.log("Selected files:", selected);
+                                    console.log("File yang dipilih:", selected);
                                     return selected;
                                 }
                             });
         
                             if (selectedFiles) {
-                                console.log("Files selected for download:", selectedFiles);
+                                console.log("File dipilih untuk diunduh:", selectedFiles);
                                 // Send the selected files to the backend
 
-                                console.log('Files selected for download:', selectedFiles);
+                                console.log('File dipilih untuk diunduh:', selectedFiles);
         
                                 // Log the external checkboxes signal value
-                                console.log('External checkboxes:', externalCheckboxes());
+                                console.log('Kotak centang eksternal:', externalCheckboxes());
                                 
 
                                 const CTG = localStorage.getItem('CTG');
@@ -341,8 +341,8 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                 })
                                 
                                 Swal.fire({
-                                    title: "Starting Download!",
-                                    text: "The selected files are now downloading.",
+                                    title: "Mulai Unduh!",
+                                    text: "File yang dipilih sekarang sedang diunduh.",
                                     icon: "success"
                                 }).then(() => {
                                     localStorage.setItem('CDG', JSON.stringify([infoSingleCDG]));  // Store only the current game
@@ -353,23 +353,23 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                             } 
                         } else {
                             Swal.fire({
-                                title: "ERROR: PATH DOES NOT EXIST",
-                                text: "Your path does not exist, please use the 'Select Path' button to be sure you are using the right path.",
+                                title: "KESALAHAN: JALUR TIDAK ADA",
+                                text: "Jalur Anda tidak ada, silakan gunakan tombol 'Pilih Jalur' untuk memastikan Anda menggunakan jalur yang benar.",
                                 icon: "error"
                             });
                         }
                     } catch (error) {
                         console.error('Error:', error);
                         Swal.fire({
-                            title: "ERROR: INVALID PATH",
-                            text: "There was an error checking the path, please try again.",
+                            title: "KESALAHAN: JALUR TIDAK VALID",
+                            text: "Terjadi kesalahan saat memeriksa jalur, silakan coba lagi.",
                             icon: "error"
                         });
                     }
                 } else {
                     Swal.fire({
-                        title: "ERROR: EMPTY PATH",
-                        text: "Your path is empty, please use the dialog button to be sure you are using a path.",
+                        title: "KESALAHAN: JALUR KOSONG",
+                        text: "Jalur Anda kosong, silakan gunakan tombol dialog untuk memastikan Anda menggunakan jalur.",
                         icon: "error"
                     });
                 }
@@ -389,10 +389,10 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
             // Write the updated config back to the file
             await writeFile(ftgConfigPath, JSON.stringify(configData, null, 2));
         } catch (error) {
-            console.error('Failed to update settings.json:', error);
+            console.error('Gagal memperbarui settings.json:', error);
             Swal.fire({
-                title: "ERROR: FAILED TO UPDATE GAME PATH",
-                text: "There was an error updating the game path in the settings file.",
+                title: "KESALAHAN: GAGAL MEMPERBARUI JALUR GAME",
+                text: "Terjadi kesalahan saat memperbarui jalur game di file pengaturan.",
                 icon: "error"
             });
         }
@@ -420,7 +420,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
             const horizontalSlide = document.querySelector('.horizontal-slide');
             horizontalSlide.style.transform = 'translateY(0)';
         } catch (error) {
-            console.error('Error fetching game info:', error);
+            console.error('Terjadi kesalahan saat mengambil info game:', error);
             setLoading(false);
         }
     }
@@ -437,7 +437,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                 try {
                     imagesCache = JSON.parse(cacheFileContent);
                 } catch (parseError) {
-                    console.log("Invalid Persistent Cache JSON");
+                    console.log("JSON Cache Persisten Tidak Valid");
                     return;
                 }
 
@@ -445,7 +445,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                     setAdditionalImages(imagesCache[url]);
                     setShowPlaceholder(false);
                 } else {
-                    console.log("Not found in persistent cache, going to start the function.");
+                    console.log("Tidak ditemukan dalam cache persisten, akan memulai fungsi.");
                     imagesCheckingTimeoutID = setTimeout(checkImages.bind(null, url), 500);
                 }
 
@@ -459,7 +459,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
 
             await checkImages(gameLinkPromise);
         } catch (error) {
-            console.error('Error fetching additional images:', error);
+            console.error('Terjadi kesalahan saat mengambil gambar tambahan:', error);
         }
     }
 
@@ -492,16 +492,16 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
 
     function cutTheDescription(description) {
         if (!description) {
-            return { repackDescription: 'Description not available', officialDescription: 'Description not available' };
+            return { repackDescription: 'Deskripsi tidak tersedia', officialDescription: 'Deskripsi tidak tersedia' };
         }
 
-        const repackIndex = description.indexOf('Repack Features');
-        const gameDescriptionIndex = description.indexOf('\nGame Description\n');
+        const repackIndex = description.indexOf('Fitur Repack');
+        const gameDescriptionIndex = description.indexOf('\nDeskripsi Game\n');
 
         if (repackIndex !== -1 && gameDescriptionIndex !== -1) {
 
             const repackDescription = description.substring(repackIndex, gameDescriptionIndex).trim();
-            const officialDescription = description.substring(gameDescriptionIndex + '\nGame Description\n'.length).trim();
+            const officialDescription = description.substring(gameDescriptionIndex + '\nDeskripsi Game\n'.length).trim();
             return { repackDescription, officialDescription };
 
         } else {
@@ -510,21 +510,21 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
     }
 
     function extractDetails(description) {
-        let genresTagsMatch = description.match(/Genres\/Tags:\s*([^\n]+)/);
-        let companiesMatch = description.match(/Company:\s*([^\n]+)/);
+        let genresTagsMatch = description.match(/Genre\/Tag:\s*([^\n]+)/);
+        let companiesMatch = description.match(/Perusahaan:\s*([^\n]+)/);
         if (companiesMatch === null) {
-            companiesMatch = description.match(/Companies:\s*([^\n]+)/);
+            companiesMatch = description.match(/Perusahaan:\s*([^\n]+)/);
         }
-        const languageMatch = description.match(/Languages:\s*([^\n]+)/);
-        const originalSizeMatch = description.match(/Original Size:\s*([^\n]+)/);
-        const repackSizeMatch = description.match(/Repack Size:\s*([^\n]+)/);
+        const languageMatch = description.match(/Bahasa:\s*([^\n]+)/);
+        const originalSizeMatch = description.match(/Ukuran Asli:\s*([^\n]+)/);
+        const repackSizeMatch = description.match(/Ukuran Repack:\s*([^\n]+)/);
 
         return {
-            'Genre/Tags:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
-            Companies: companiesMatch ? companiesMatch[1].trim() : 'N/A',
-            Language: languageMatch ? languageMatch[1].trim() : 'N/A',
-            OriginalSize: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
-            RepackSize: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
+            'Genre/Tag:': genresTagsMatch ? genresTagsMatch[1].trim() : 'N/A',
+            Perusahaan: companiesMatch ? companiesMatch[1].trim() : 'N/A',
+            Bahasa: languageMatch ? languageMatch[1].trim() : 'N/A',
+            UkuranAsli: originalSizeMatch ? originalSizeMatch[1].trim() : 'N/A',
+            UkuranRepack: repackSizeMatch ? repackSizeMatch[1].trim() : 'N/A',
         };
     }
 
@@ -565,7 +565,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                 <div class="arrow-down"></div>
             </div>
             {loading() ? (
-                <p>Loading...</p>
+                <p>Memuat...</p>
             ) : (
                 gameInfo() && (
                     <div class="game-info">
@@ -574,7 +574,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                 <img src={gameInfo().img} alt={`${gameInfo().title} logo`} class="game-logo" />
                                 <h1 class="game-title">{gameInfo().title.toUpperCase()}</h1>
                             </div>
-                            <button class="download-btn" onClick={() => torrentDownloadPopup(gameInfo().magnetlink, gameInfo().title, gameInfo().img)}>Download Game</button>
+                            <button class="download-btn" onClick={() => torrentDownloadPopup(gameInfo().magnetlink, gameInfo().title, gameInfo().img)}>Unduh Game</button>
                         </div>
                         <div class="body-horizontal-game-info">
                             <div class="description-section">
@@ -582,7 +582,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                     {cutTheDescription(gameInfo().desc).officialDescription}
                                 </div>
                                 <span class="read-more" onClick={toggleDescription}>
-                                    {isDescOpen() ? 'Read less...' : 'Read more...'}
+                                    {isDescOpen() ? 'Baca lebih sedikit...' : 'Baca lebih banyak...'}
                                 </span>
                                 <div class="repack-description">
                                     {Object.entries(extractDetails(gameInfo().desc)).map(([title, description], index) => (
