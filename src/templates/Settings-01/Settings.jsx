@@ -1,4 +1,5 @@
 import { createSignal, onMount } from 'solid-js'
+import { useTranslation } from "solid-i18next";
 import { appConfigDir } from '@tauri-apps/api/path'
 import {
     readTextFile,
@@ -319,9 +320,20 @@ const SettingsPage = () => {
         }
     }
 
+    
+const Settings = () => {
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = createSignal(i18n.language);
+
+  const handleLanguageChange = (language) => {
+    i18n.changeLanguage(language);
+    setSelectedLanguage(language);
+  };
+
+    
     return (
         <div class="settings-page">
-            <h1>Settings</h1>
+            <h1>{t("settings")}</h1>
 
             {/* Notification box */}
             {notificationVisible() && (
@@ -333,9 +345,27 @@ const SettingsPage = () => {
                     {notificationMessage()}
                 </div>
             )}
+
+      {/* Language Selection Section */}
+      <h2>{t("languageSelection")}</h2>
+      <div className="language-selection">
+        <button
+          className={`language-btn ${selectedLanguage() === "en" ? "active" : ""}`}
+          onClick={() => handleLanguageChange("en")}
+        >
+          English
+        </button>
+        <button
+          className={`language-btn ${selectedLanguage() === "id" ? "active" : ""}`}
+          onClick={() => handleLanguageChange("id")}
+        >
+          Indonesian
+        </button>
+      </div>
+            
             {/* Installation Settings start*/}
             <section>
-                <h2>Installation Settings</h2>
+                <h2>{t("installationSettings")}</h2>
                 <div class="form-group">
                     <label>
                         <input
@@ -349,9 +379,7 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Automatic installation of games. (This will
-                        automatically start the installation process after
-                        downloading the game)
+                        {t("autoInstall")}
                     </label>
                 </div>
                 <div class="form-group">
@@ -367,8 +395,7 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Auto-clean game files after installation.{' '}
-                        <strong>//Not working//</strong>
+                        {t("autoClean")}
                     </label>
                 </div>
                 <div class="form-group">
@@ -384,8 +411,7 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Show hover title on game icons (useful for long game
-                        names).
+                        {t("hoverTitle")}
                     </label>
                 </div>
                 <div class="form-group">
@@ -401,8 +427,7 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Limit the installer to 2GB of RAM. (It will be
-                        automatically on if you have 8GB or less)
+                        {t("two_gb_limit")}
                     </label>
                 </div>
                 <div class="form-group">
@@ -418,8 +443,7 @@ const SettingsPage = () => {
                                 })
                             }
                         />
-                        Hide NSFW content. (This will hide all NSFW content from
-                        the launcher)
+                        {t("hide_nsfw_content")}
                     </label>
                 </div>
             </section>
@@ -427,18 +451,18 @@ const SettingsPage = () => {
 
             {/* Download Settings */}
             <section>
-                <h2>Download Settings</h2>
+                <h2>{t("downloadSettings")}</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button class="upload-btn" onClick={selectDownloadPath}>
-                            Choose Download Path
+                            {t("selectDownloadPath")}
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedDownloadPath()
                                 ? selectedDownloadPath()
-                                : 'No download path selected'}
+                                : '{t("selectedDownloadPath")}'}
                         </p>
                         {selectedDownloadPath() && (
                             <button
@@ -454,18 +478,18 @@ const SettingsPage = () => {
 
             {/* Import Settings */}
             <section>
-                <h2>Import Settings</h2>
+                <h2>{t("importSettings")}</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button class="upload-btn" onClick={selectImportPath}>
-                            Choose Import File
+                            {t("selectImportPath")}
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedImportPath()
                                 ? selectedImportPath()
-                                : 'No import path selected'}
+                                : '{t("selectedImportPath")}'}
                         </p>
                         {selectedImportPath() && (
                             <button class="clear-btn" onClick={clearImportPath}>
@@ -478,21 +502,21 @@ const SettingsPage = () => {
 
             {/* Background Image Settings */}
             <section>
-                <h2>Background Image</h2>
+                <h2>{t("backgroundImage")}</h2>
                 <div class="upload-container">
                     <div class="upload-btn-wrapper">
                         <button
                             class="upload-btn"
                             onClick={selectBackgroundImage}
                         >
-                            Select Background Image
+                            {t("selectBackgroundImage")}
                         </button>
                     </div>
                     <div class="path-box-inline">
                         <p class="path-output-inline">
                             {selectedBackgroundImagePath()
                                 ? selectedBackgroundImagePath()
-                                : 'No background image selected'}
+                                : '{t("selectedBackgroundImagePath")}'}
                         </p>
                         {selectedBackgroundImagePath() && (
                             <button
@@ -506,25 +530,25 @@ const SettingsPage = () => {
                 </div>
             </section>
 
-            {/* Okki Drive Information */}
+            {/* About Us*/}
             <section>
-                <h2>Okki Drive Information</h2>
+                <h2>{t("aboutUs")}</h2>
                 <div class="form-group">
-                    <p>Application Version: {version()}</p>
+                    <p>{t("appVersion")}: {version()}</p>
                 </div>
                 <div class="form-group">
                     <button 
                         class="check-update-btn"
                         onClick={handleCheckForUpdates}
                         >
-                        Check for Updates
+                        {t("handleCheckForUpdates")}
                     </button>
                 </div>
             </section>
 
             {/* Social Links */}
             <section class="social-links">
-                <h2>Follow Us</h2>
+                <h2>{t("followUs")}</h2>
                 <div class="card">
                     <a
                         class="social-link1"
@@ -568,19 +592,19 @@ const SettingsPage = () => {
 
             {/* Donation Buttons */}
             <section class="donation-links">
-                <h2>Support Us</h2>
+                <h2>{t("supportUs")}</h2>
                 <div class="card donation-buttons">
                     <a class="donation-btn trakteer-btn" href="https://trakteer.id/okkidwi/tip" target="_blank">
-                        Donate via Trakteer
+                        {t("trakteer-btn")}
                     </a>
                     <a class="donation-btn saweria-btn" href="https://saweria.co/okkidwi" target="_blank">
-                        Donate via Saweria
+                        {t("saweria-btn")}
                     </a>
                 </div>
             </section>
 
                 <button class="boton-elegante" style={"width: fit-content;"} onClick={handleSave}>
-                    Save Settings
+                    {t("handleSave")}
                 </button>
 
             </section>
