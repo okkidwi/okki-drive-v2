@@ -20,7 +20,7 @@ function App() {
     const [notificationMessage, setNotificationMessage] = createSignal('');
 
     onMount(() => {
-        console.log('App mounted. Setting up event listeners...');
+        console.log('Aplikasi telah terpasang. Menyiapkan event listener..');
         
         // Emit that the frontend is ready
         //TODO: This will be used to trigger reloading the UI components when the frontend is ready
@@ -34,8 +34,8 @@ function App() {
             setBackgroundImage(backgroundImagePath);
             // console.log('Background image set to:', backgroundImagePath); //It's hella long output
         } catch (error) {
-            console.error('Error setting background image:', error);
-            setNotificationMessage('Error setting background image.');
+            console.error('Kesalahan saat mengatur gambar latar belakang:', error);
+            setNotificationMessage('Kesalahan saat mengatur gambar latar belakang.');
             setIsDialogOpen(true);
         }
             
@@ -52,14 +52,14 @@ function App() {
 
         // Listen for network failure event and handle it
         listen('network-failure', (event) => {
-            setNotificationMessage(`Network failure: ${event.payload.message}`);
+            setNotificationMessage(`Kegagalan jaringan: ${event.payload.message}`);
             setIsDialogOpen(true);
         });
 
         listen('scraping_failed_event', (event) => {
-            setNotificationMessage(`Scraping failed: ${event.payload.message}`);
+            setNotificationMessage(`Scraping gagal: ${event.payload.message}`);
             setIsDialogOpen(true);
-            console.log('Scraping failed:', event.payload.message);
+            console.log('Scraping gagal:', event.payload.message);
         });
     });
 
@@ -76,23 +76,23 @@ function App() {
         } else {
             // Remove background if no image is set
             document.body.style.backgroundImage = '';
-            console.log('No background image set.');
+            console.log('Tidak ada gambar latar belakang yang ditetapkan.');
         }
     }
 
     function handleWindowClose() {
         let cdgStats = localStorage.getItem('CDG_Stats');
-        console.log('Current CDG_Stats from localStorage:', cdgStats);
+        console.log('Statistik CDG saat ini dari localStorage:', cdgStats);
 
         try {
             cdgStats = JSON.parse(cdgStats);
             if (cdgStats) {
                 cdgStats.state = 'paused';
                 localStorage.setItem('CDG_Stats', JSON.stringify(cdgStats));
-                console.log('Updated CDG_Stats saved in localStorage:', cdgStats);
+                console.log('CDG_Stats yang diperbarui disimpan di localStorage:', cdgStats);
             }
         } catch (error) {
-            console.error('Error parsing CDG_Stats:', error);
+            console.error('Terjadi kesalahan saat mengurai CDG_Stats:', error);
         }
         
         appWindow.close();
