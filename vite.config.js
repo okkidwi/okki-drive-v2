@@ -32,7 +32,7 @@ export default defineConfig(async () => ({
   build: {
     target: "esnext", // Modern JavaScript target for Tauri
     rollupOptions: {
-      external: ['i18next'], // Externalize i18next
+      external: ['i18next', 'react-i18next'],
     },
   },
 }));
