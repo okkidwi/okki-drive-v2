@@ -189,7 +189,7 @@ function Mylibrary() {
 
   async function handleAddDownloadedGames() {
     Swal.fire({
-      title: "Add a game?",
+      title: "Tambahkan game?",
       html: `
                 <input
                     type="text"
