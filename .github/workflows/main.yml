@@ -28,30 +28,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: setup node
+      # Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 'lts/*'
           cache: 'npm'
 
       # Install Rust with stable version
-      - name: install Rust stable
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
       # Cache Rust dependencies
-      - name: Rust cache
+      - name: Rust Cache
         uses: swatinem/rust-cache@v2
         with:
           workspaces: './src-tauri -> target'
 
-      - name: install frontend dependencies
-        run: npm install # Adjust for npm or pnpm if needed
+      # Install frontend dependencies
+      - name: Install frontend dependencies
+        run: npm install
+
+      # Check Tauri configuration and dependencies
+      - name: Check Tauri Build Info
+        run: npx tauri info
 
       # Build and publish the Tauri app
-      - uses: tauri-apps/tauri-action@v0
+      - name: Build and Publish Tauri App
+        uses: tauri-apps/tauri-action@v1 # updated to v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY : ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
         with:
           tagName: app-v__VERSION__
           releaseName: 'App v__VERSION__'
@@ -59,3 +66,16 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: '--features portable'
+
+      # Post-build diagnostics (if there are errors)
+      - name: Diagnostic on Error
+        if: failure()
+        run: |
+          echo "Debugging build failure..."
+          echo "Environment Info:"
+          node -v
+          rustc --version
+          cargo --version
+          npm -v
+          echo "Tauri Info:"
+          npx tauri info
