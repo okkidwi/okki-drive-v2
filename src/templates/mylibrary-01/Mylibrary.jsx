@@ -30,8 +30,10 @@ function Mylibrary() {
   const [selectedGame, setSelectedGame] = createSignal(null);
   const [backgroundMainBrightness, setBackgroundMainBrightness] =
     createSignal("dark");
+
   const [searchTerm, setSearchTerm] = createSignal("");
   const [searchResults, setSearchResults] = createSignal([]);
+
   async function handleResultClick(result) {
     // Fetch the game information
     await invoke("get_singular_game_info", { gameLink: result });
@@ -42,6 +44,7 @@ function Mylibrary() {
     const fileContentObj = await readFile(gameInfoPath);
     const gameInfo = JSON.parse(fileContentObj.content);
     console.log(gameInfo);
+
     // Ask for the executable path
     const executablePath = await open({
       multiple: false,
@@ -52,11 +55,13 @@ function Mylibrary() {
         },
       ],
     });
+
     if (executablePath) {
       // Determine the path for downloaded_games.json
       const appDir = await appDataDir();
       const dirPath = appDir;
       const filePath = `${dirPath}data/downloaded_games.json`;
+
       // Fetch and initialize game data
       let gameData;
       try {
@@ -72,6 +77,7 @@ function Mylibrary() {
           return;
         }
       }
+
       // Add the new game data
       gameData.push({
         title: gameInfo[0].title,
@@ -79,6 +85,7 @@ function Mylibrary() {
         magnetlink: gameInfo[0].magnetlink,
         path: executablePath,
       });
+
       // Write back the updated game data
       try {
         await writeFile(filePath, JSON.stringify(gameData, null, 2));
@@ -120,41 +127,51 @@ function Mylibrary() {
           console.error("Gagal mengambil sitemap:", response.statusText);
         }
       }
+
       let results = postURLs.filter((postURL) => {
         let title = getTitleFromUrl(postURL).toUpperCase().replace(/-/g, " ");
         return title.includes(query.toUpperCase().trim());
       });
+
       setSearchResults(results.slice(0, 5));
     } catch (error) {
       console.error("Gagal mengambil data sitemap:", error);
     }
   }
+
   function capitalizeTitle(title) {
     return title.replace(/-/g, " ").toUpperCase();
   }
+
   function getTitleFromUrl(url) {
     var parts = url.split("/");
     var title = parts[3];
     return title;
   }
+
   async function handleInputChange(event) {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
+
     if (value !== "") {
       await showResults(value);
+
       // Render the results inside the Swal modal
       const resultsContainer = document.getElementById("search-results-box");
       resultsContainer.innerHTML = "";
+
       searchResults().forEach((result) => {
         const resultItem = document.createElement("div");
         resultItem.className = "search-result-item";
         resultItem.textContent = capitalizeTitle(getTitleFromUrl(result));
         resultItem.setAttribute("data-url", result);
+
         // Attach the click event listener
         resultItem.addEventListener("click", () => {
           // Update the search bar with the clicked result's text
           const searchBar = document.getElementById("search-bar");
           searchBar.value = capitalizeTitle(getTitleFromUrl(result));
+
           // Remove previous selection and highlight the clicked result
           document
             .querySelectorAll(".search-result-item")
@@ -169,6 +186,7 @@ function Mylibrary() {
       document.getElementById("search-results-box").innerHTML = "";
     }
   }
+
   async function handleAddDownloadedGames() {
     Swal.fire({
       title: "Add a game?",
@@ -229,10 +247,12 @@ function Mylibrary() {
       gamehubLinkText.style.backgroundColor = "";
     }
   });
+
   async function updateGamePathInFile(gameTitle, newPath, filePath) {
     try {
       const data = await readFile(filePath);
       const gameData = JSON.parse(data.content);
+
       // Step 2: Find the game by title and update the path
       const game = gameData.find((g) => g.title === gameTitle);
       if (game) {
@@ -241,6 +261,7 @@ function Mylibrary() {
         console.error("Game tidak ditemukan!");
         return;
       }
+
       // Step 3: Write the updated JSON back to the file
       const updatedJsonString = JSON.stringify(gameData, null, 2);
       await writeFile(filePath, updatedJsonString);
@@ -249,27 +270,34 @@ function Mylibrary() {
       console.error("Terjadi kesalahan saat memperbarui jalur game:", error);
     }
   }
+
   async function randomImageFinder() {
     const imageElements = document.querySelectorAll(".launcher-container img");
     if (imageElements.length > 0) {
       const randomIndex = Math.floor(Math.random() * imageElements.length);
       const selectedImageSrc = imageElements[randomIndex].getAttribute("src");
+
       const fitgirlLauncher = document.querySelector(".launcher-container");
       const scrollPosition =
         window.scrollY || document.documentElement.scrollTop;
+
       const docBlurOverlay = document.querySelector(".blur-overlay");
       if (docBlurOverlay != null) {
         docBlurOverlay.remove();
       }
+
       // const docColorFilterOverlay = document.querySelector('.color-blur-overlay')
       // if (docColorFilterOverlay === null){
       //     const colorFilterOverlay = document.createElement('div');
       //     colorFilterOverlay.className = 'color-blur-overlay';
       //     fitgirlLauncher.appendChild(colorFilterOverlay)
       //     console.log("colroe")
+
       // }
+
       const blurOverlay = document.createElement("div");
       blurOverlay.className = "blur-overlay";
+
       fitgirlLauncher.appendChild(blurOverlay);
       blurOverlay.style.backgroundColor = `rgba(0, 0, 0, 0.4)`;
       blurOverlay.style.backgroundImage = `url(${selectedImageSrc})`;
@@ -294,6 +322,7 @@ function Mylibrary() {
       try {
         const fileContentObj = await readFile(filePath);
         let gameData = JSON.parse(fileContentObj.content);
+
         const gameIndex = gameData.findIndex((g) => g.title === game.title);
         if (gameIndex !== -1) {
           gameData[gameIndex].favourite = !gameData[gameIndex].favourite;
@@ -314,10 +343,13 @@ function Mylibrary() {
     // close the context menu
     setGameContextMenuVisible(false);
   }
+
   async function handleRemoveGame() {
     const game = selectedGame();
     if (game) {
+
       setGameContextMenuVisible(false); // close the context menu
+
       const result = await Swal.fire({
         title: `Hapus ${game.title}?`,
         html: "Tindakan ini tidak dapat dibatalkan!<br><strong>INI TIDAK AKAN MENGHAPUS FILE!</strong>",
@@ -326,6 +358,7 @@ function Mylibrary() {
         confirmButtonText: "Ya, hapus itu!",
         cancelButtonText: "Batal",
       });
+
       if (result.isConfirmed) {
         try {
           await removeGameFromFile(game);
@@ -342,12 +375,15 @@ function Mylibrary() {
       }
     }
   }
+
   async function removeGameFromFile(game) {
     const filePath = await downloadedGamePath();
     try {
       const fileContentObj = await readFile(filePath);
       let gameData = JSON.parse(fileContentObj.content);
+
       gameData = gameData.filter((g) => g.title !== game.title);
+
       await writeFile(filePath, JSON.stringify(gameData, null, 2));
       setRemovedGame(gameData);
     } catch (error) {
@@ -356,6 +392,7 @@ function Mylibrary() {
       );
     }
   }
+
   createEffect(async () => {
     await randomImageFinder();
     const timeOut = setTimeout(randomImageFinder, 500);
@@ -365,6 +402,7 @@ function Mylibrary() {
       clearTimeout(timeOut);
     });
   });
+
   createEffect(async () => {
     console.log(addedGame());
     console.log(removedGame());
@@ -385,7 +423,6 @@ function Mylibrary() {
       throw error;
     }
   });
-    }
 
   onMount(() => {
     // It's a nodeList so you have to forEach.
@@ -398,8 +435,10 @@ function Mylibrary() {
       e.preventDefault();
     });
   });
+
   onMount(async () => {
     const gameData = [];
+
     const appDir = await appDataDir();
     const dirPath = `${appDir.replace(/\\/g, "/")}/data`;
     const filePath = `${dirPath}/downloaded_games.json`;
@@ -410,6 +449,7 @@ function Mylibrary() {
         await createDir(dirPath, { recursive: true });
         console.log("Direktori dibuat:", dirPath);
       }
+
       // Check if the settings file exists
       const fileExists = await exists(filePath);
       if (!fileExists) {
@@ -423,6 +463,7 @@ function Mylibrary() {
       return filePath;
     }
   });
+
   async function createGameCollectionFolder() {
     const { value: folderName } = await Swal.fire({
       title: "Buat koleksi baru",
@@ -463,6 +504,7 @@ function Mylibrary() {
       }
     }
   }
+
   async function handleGameFavourite() {
     const game = selectedGame();
     if (game) {
@@ -470,10 +512,12 @@ function Mylibrary() {
       try {
         const fileContentObj = await readFile(filePath);
         let gameData = JSON.parse(fileContentObj.content);
+
         const gameIndex = gameData.findIndex((g) => g.title === game.title);
         if (gameIndex !== -1) {
           gameData[gameIndex].favourite = !gameData[gameIndex].favourite;
           await writeFile(filePath, JSON.stringify(gameData, null, 2));
+
           Swal.fire({
             title: "Game difavoritkan!",
             text: `Game "${game.title}" telah berhasil difavoritkan.`,
@@ -482,8 +526,10 @@ function Mylibrary() {
             didOpen: () => {
                 Swal.showLoading();
             }
+
             });
           console.log(`Game ${game.title} difavoritkan`);
+
          
         } else {
           console.error("Game tidak ditemukan dalam daftar");
@@ -504,6 +550,7 @@ async function filterSelectionTitle() {
   // show selected
 
 }
+
 
   return (
     <>
@@ -557,6 +604,7 @@ async function filterSelectionTitle() {
               <h1 className="title-category-element dark">Library</h1>
             </div>
           )}
+
           {/* <div class="filter-selection-display">
             <div class="filter-selection">
                 <div class="filter-selection-text">`Filter by: ${filterSelectionTitle}`</div>
@@ -576,6 +624,8 @@ async function filterSelectionTitle() {
                     </div>
 
           </div> */}
+
+
           <div class="game-grid">
             {/* Iterate over gameData to dynamically create game elements */}
             {downlaodedGamesList().map((game, i) => (
@@ -627,6 +677,7 @@ async function filterSelectionTitle() {
                 }}
               >
                 <img src={game.img} alt={game.title} />
+
                 {/* {game.favourite && (
                                     <div class="favourite-icon">
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#de4005">
@@ -637,6 +688,7 @@ async function filterSelectionTitle() {
                                         </svg>
                                     </div>
                                 )} */}
+
                 {!game.path && (
                   <div class="warning-icon">
                     <svg
@@ -653,6 +705,7 @@ async function filterSelectionTitle() {
                 )}
               </div>
             ))}
+
             <div class="add-game-container">
               <button class="button" onClick={handleAddDownloadedGames}>
                 <svg
@@ -676,6 +729,7 @@ async function filterSelectionTitle() {
           </div>
         </div>
       </div>
+
       {gameContextMenuVisible() && (
         <div
           class="custom-context-menu"
