@@ -628,7 +628,6 @@ const SettingsPage = () => {
             </section>
 
 
-        </div>
         <button
           class="boton-elegante"
           style={"width: fit-content;"}
