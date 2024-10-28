@@ -249,7 +249,7 @@ const GameHorizontalSlide = ({ gameTitlePromise, filePathPromise, gameLinkPromis
                                     const languageOrFeature = file.match(/fg-selective-(.*)\.bin/i);
                                     label = languageOrFeature ? `Select ${languageOrFeature[1].replace(/-/g, ' ').charAt(0).toUpperCase() + languageOrFeature[1].replace(/-/g, ' ').slice(1)} Language` : 'Select Language';
                                 } else if (isOptional) {
-                                    label = `Optional: ${file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').charAt(0).toUpperCase() + file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').slice(1)}`;
+                                    label = `Opsional: ${file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').charAt(0).toUpperCase() + file.replace(/fg-optional-|\.bin/g, '').replace(/-/g, ' ').slice(1)}`;
                                 }
                             
                                 return `
