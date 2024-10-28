@@ -621,13 +621,6 @@ const SettingsPage = () => {
                 </div>
             </section>
 
-                <button class="boton-elegante" style={"width: fit-content;"} onClick={handleSave}>
-                    Simpan Pengaturan
-                </button>
-
-            </section>
-
-
         <button
           class="boton-elegante"
           style={"width: fit-content;"}
