@@ -55,6 +55,7 @@ function Recentlydownloadedgames() {
                 console.log(`Kesalahan saat memuat gambar: ${imgElement.src}`);
                 imgElement.src = 'https://via.placeholder.com/54x72';
             });
+
             // Set onclick event to MyLibrary
             //TODO: Add onclick event to open games
             uniqueGameDiv.addEventListener('click', () => {
