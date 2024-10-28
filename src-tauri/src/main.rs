@@ -101,6 +101,7 @@ async fn check_url_status(client: &Client, url: &str) -> Result<bool> {
     let response = client.head(url).send().await?;
     Ok(response.status().is_success())
 }
+
 fn parse_image_links(body: &str) -> Result<Vec<String>> {
     let document = Html::parse_document(body);
     let mut images = Vec::new();
@@ -110,6 +111,7 @@ fn parse_image_links(body: &str) -> Result<Vec<String>> {
         let href_selector_str = format!(".entry-content > p:nth-of-type({}) img[src]", p_index);
         let href_selector = Selector::parse(&href_selector_str)
             .map_err(|_| anyhow::anyhow!("Gagal mengurai pemilih"))?;
+
         for element in document.select(&href_selector) {
             if let Some(src_link) = element.value().attr("src") {
                 images.push(src_link.to_string());
@@ -122,6 +124,7 @@ fn parse_image_links(body: &str) -> Result<Vec<String>> {
 async fn fetch_image_links(client: Arc<Client>, body: &str) -> Result<Vec<String>> {
     let initial_images = parse_image_links(body)?;
     let client = Arc::clone(&client);
+
     let images = stream::iter(initial_images)
         .map(|src_link| {
             let client = Arc::clone(&client);
