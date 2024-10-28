@@ -33,16 +33,19 @@ const ChangelogPopup = () => {
             <div class="changelog-item">
               <div class="date">29 Oktober 2024 - v1.1.5</div>
               <ul class="bullet-list">
-                <li><span class="label improvement">Peningkatan:</span>
+                <li>
+                  <span class="label improvement">Peningkatan:</span>
                   <ul>
                         <li>Menambahkan penanganan kesalahan untuk menampilkan placeholder untuk gambar yang gagal dimuat di "Game yang Baru Diunduh".</li>
                         <li>Peningkatan pesan peringatan di Pengaturan untuk masukan yang lebih jelas.</li>
                         <li>Basis kode yang disiapkan untuk mendukung fitur masa depan: Game favorit dan pembuatan koleksi di Koleksiku.</li>
                   </ul>
                 </li>
+              </ul>
               <div class="date">24 Oktober 2024 - v1.1.0</div>
               <ul class="bullet-list">
-                <li><span class="label new">Fitur Baru:</span>
+                <li>
+                  <span class="label new">Fitur Baru:</span>
                   <ul>
                         <li>Menambahkan fungsi pembaruan otomatis</li>
                         <li>Memperkenalkan fitur StopTorrent untuk menghapus file yang diunduh bersamaan dengan menghentikan torrent</li>
@@ -66,7 +69,8 @@ const ChangelogPopup = () => {
                         <li>Meningkatkan penanganan kesalahan offline</li>
                   </ul>
                 </li>
-                <li><span class="label bugfix">Perbaikan Bug:</span>
+                <li>
+                  <span class="label bugfix">Perbaikan Bug:</span>
                   <ul>
                         <li>Memperbaiki masalah dengan menghentikan game dari slide vertikal tanpa menginisialisasi torrent.</li>
                         <li>Memperbaiki masalah ukuran yang dikodekan keras, terutama untuk sidebar</li>
@@ -121,6 +125,11 @@ const ChangelogPopup = () => {
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+      )}
+    </>
+);
 
 
             <div class="checkbox-container">
