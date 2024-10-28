@@ -125,11 +125,6 @@ const ChangelogPopup = () => {
                 </li>
               </ul>
             </div>
-          </div>
-        </div>
-      )}
-    </>
-);
 
 
             <div class="checkbox-container">
