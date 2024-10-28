@@ -553,7 +553,7 @@ const SettingsPage = () => {
 
       {/* Okki Drive Information */}
       <section>
-        <h2>Fit Launcher Information</h2>
+        <h2>Informasi Okki Drive</h2>
         <div class="form-group">
           <p>Versi Aplikasi: {version()}</p>
         </div>
