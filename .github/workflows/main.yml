@@ -66,16 +66,3 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: '--features portable'
-
-      # Post-build diagnostics (if there are errors)
-      - name: Diagnostic on Error
-        if: failure()
-        run: |
-          echo "Debugging build failure..."
-          echo "Environment Info:"
-          node -v
-          rustc --version
-          cargo --version
-          npm -v
-          echo "Tauri Info:"
-          npx tauri info
