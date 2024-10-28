@@ -215,7 +215,7 @@ const SettingsPage = () => {
         await saveSettings(newSettings);
       }
     } catch (error) {
-      console.error("Settings: Tidak dapat memilih jalur impor: ", error);
+      console.error("Pengaturan: Tidak dapat memilih jalur impor: ", error);
 
       swalMessages.error.text = "Terjadi kesalahan saat memilih jalur impor. Silakan coba lagi.";
     }
@@ -381,7 +381,7 @@ const SettingsPage = () => {
 
   return (
     <div class="settings-page">
-      <h1>Settings</h1>
+      <h1>Pengaturan</h1>
 
       {/* Notification box */}
       {notificationVisible() && (
