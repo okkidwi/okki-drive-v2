@@ -28,7 +28,7 @@
             ]
         },
         "updater": {
-            "active": true,
+            "active": false,
             "endpoints": [
               "https://gist.githubusercontent.com/CarrotRub/495fb3cd9e893a19b3d961309e299fc7/raw/"
             ],
