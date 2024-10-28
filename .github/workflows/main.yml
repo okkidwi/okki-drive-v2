@@ -49,10 +49,6 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      # Check Tauri configuration and dependencies
-      - name: Check Tauri Build Info
-        run: npx tauri info
-
       # Build and publish the Tauri app
       - name: Build and Publish Tauri App
         uses: tauri-apps/tauri-action@v0
