@@ -16,6 +16,7 @@ import { resolveResource } from "@tauri-apps/api/path";
 import { resourceDir } from "@tauri-apps/api/path"; // Use resourceDir for resolving the assets path
 import { join, sep, appDir, appDataDir } from "@tauri-apps/api/path";
 import { readBinaryFile } from "@tauri-apps/api/fs";
+
 import "./Settings.css";
 import Swal from "sweetalert2";
 
@@ -36,6 +37,7 @@ async function loadSettings() {
   const configDir = await appConfigDir();
   const dirPath = `${configDir.replace(/\\/g, "/")}/fitgirlConfig`;
   const settingsPath = `${dirPath}/settings.json`;
+
   try {
     // Create folder if it does not exist
     const dirExists = await exists(dirPath);
@@ -61,7 +63,7 @@ async function loadSettings() {
     if (!settings.hasOwnProperty("hide_nsfw_content")) {
       settings.hide_nsfw_content = defaultSettings.hide_nsfw_content;
       await writeTextFile(settingsPath, JSON.stringify(settings, null, 2));
-        }
+    }
     return settings;
   } catch (error) {
     console.error("Gagal memuat pengaturan:", error);
@@ -74,6 +76,7 @@ async function saveSettings(settings) {
   const configDir = await appConfigDir();
   const dirPath = `${configDir.replace(/\\/g, "/")}/fitgirlConfig`;
   const settingsPath = `${dirPath}/settings.json`;
+
   try {
     await writeTextFile(settingsPath, JSON.stringify(settings, null, 2));
     return true;
@@ -97,22 +100,27 @@ const SettingsPage = () => {
   );
   const [selectedBackgroundImagePath, setSelectedBackgroundImagePath] =
     createSignal(localStorage.getItem("LBIP") || "");
+
   // Show the selected background image path
   const [selectedBackgroundImagePath_1, setSelectedBackgroundImagePath_1] =
     createSignal(localStorage.getItem("LBIP_PATH_64") || "");
+
   onMount(async () => {
     try {
       let gamehubDiv = document.querySelectorAll(".gamehub-container");
       let libraryDiv = document.querySelectorAll(".launcher-container");
       let settingsDiv = document.querySelectorAll(".settings-page");
+
       if (gamehubDiv) {
         let gamehubLinkText = document.querySelector("#link-gamehub");
         gamehubLinkText.style.backgroundColor = "";
       }
+
       if (libraryDiv) {
         let libraryLinkText = document.querySelector("#link-library");
         libraryLinkText.style.backgroundColor = "";
       }
+
       if (settingsDiv) {
         let settingsLinkText = document.querySelector("#link-settings");
         settingsLinkText.style.backgroundColor = "#ffffff0d";
@@ -121,6 +129,7 @@ const SettingsPage = () => {
       // Load settings from the JSON file
       const initialSettings = await loadSettings();
       setSettings(initialSettings);
+
       // Fetch the app version
       const appVersionValue = await getVersion();
       setVersion(appVersionValue);
@@ -129,8 +138,8 @@ const SettingsPage = () => {
     } finally {
       setLoading(false);
     }
+  });
 
- });
   // Save settings and show notification
   const handleSave = async () => {
     const success = await saveSettings(settings());
@@ -150,7 +159,6 @@ const SettingsPage = () => {
       });
     }
   };
-    }
 
   const selectDownloadPath = async () => {
     try {
@@ -187,12 +195,14 @@ const SettingsPage = () => {
     };
     saveSettings(newSettings);
   };
+
   const selectImportPath = async () => {
     try {
       const selectImportPath = await open({
         directory: true,
         multiple: false,
       });
+
       if (selectImportPath) {
         const newSettings = {
           ...settings(),
@@ -206,6 +216,7 @@ const SettingsPage = () => {
       }
     } catch (error) {
       console.error("Settings: Tidak dapat memilih jalur impor: ", error);
+
       swalMessages.error.text = "Terjadi kesalahan saat memilih jalur impor. Silakan coba lagi.";
     }
   };
@@ -221,6 +232,7 @@ const SettingsPage = () => {
     };
     saveSettings(newSettings);
   };
+
   const selectBackgroundImage = async () => {
     try {
       const selectedBackgroundImage = await open({
@@ -232,6 +244,7 @@ const SettingsPage = () => {
           },
         ],
       });
+
       if (selectedBackgroundImage) {
           // Notify the user that the background is being applied
           Swal.fire({
@@ -245,6 +258,7 @@ const SettingsPage = () => {
   
         // Read the binary data of the image file
         const imageData = await readBinaryFile(selectedBackgroundImage);
+
         // Convert the binary data to a base64 string
         const base64String = btoa(
           new Uint8Array(imageData).reduce(
@@ -252,9 +266,12 @@ const SettingsPage = () => {
             ""
           )
         );
+
         // Create a data URL for the image
         const dataUrl = `data:image/jpeg;base64,${base64String}`;
+
         // Save the data URL instead of the file path
+        const newSettings = {
           ...settings(),
           background_image_path_64: dataUrl, // Store the base64 data URL
           background_image_path: selectedBackgroundImage, // Store the file path
@@ -284,14 +301,17 @@ const SettingsPage = () => {
         didOpen: () => {
           Swal.showLoading();
         }
+
       });
     }
   };
+
   // Clear the background image path and set it to an empty string
   const clearBackgroundImagePath = async () => {
     setSelectedBackgroundImagePath("");
     localStorage.setItem("LBIP", "");
     localStorage.setItem("LBIP_PATH_64", "");
+
     // Remove from settings
     const newSettings = {
       ...settings(),
@@ -300,6 +320,7 @@ const SettingsPage = () => {
     };
     await saveSettings(newSettings);
     setSettings(newSettings);
+
     // Notify the user that the background is being removed
     Swal.fire({
       title: "Gambar Latar Belakang",
@@ -310,9 +331,11 @@ const SettingsPage = () => {
         Swal.showLoading();
       },
     });
+
     setTimeout(() => {
         window.location.reload()
     }, 2000);
+
   };
   
   const swalMessages = {
@@ -327,6 +350,8 @@ const SettingsPage = () => {
       confirmButtonText: "OK",
     },
   };
+
+
   // Check for updates function
   const handleCheckForUpdates = async () => {
     try {
@@ -453,6 +478,7 @@ const SettingsPage = () => {
         </div>
       </section>
       {/* Installation Settings End*/}
+
       {/* Download Settings */}
       <section>
         <h2>Pengaturan Unduh</h2>
@@ -476,6 +502,7 @@ const SettingsPage = () => {
           </div>
         </div>
       </section>
+
       {/* Import Settings */}
       <section>
         <h2>Pengaturan Impor</h2>
@@ -499,6 +526,7 @@ const SettingsPage = () => {
           </div>
         </div>
       </section>
+
       {/* Background Image Settings */}
       <section>
         <h2>Gambar Latar Belakang</h2>
@@ -612,4 +640,5 @@ const SettingsPage = () => {
     </div>
   );
 };
+
 export default SettingsPage;
