@@ -76,3 +76,10 @@
     animation: 1s animation-white-to-gray ease-in-out;
     color: #333;
 }
+
+.tr-overlay-wrapper {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+}
