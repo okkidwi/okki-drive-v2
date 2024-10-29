@@ -223,7 +223,20 @@ function Gamehub() {
             <div className="Recently-Updated">
                 <UpdatedGames />
             </div>
-        </div>
+    {/* Donation button script */}
+    <script type='text/javascript' src='https://assets.trakteer.id/js/trbtn-overlay.min.js'></script>
+    <script
+        type='text/javascript'
+        class='troverlay'
+    >
+        {`
+            (function() {
+                var trbtnId = trbtnOverlay.init('Donasi', '#be1e2d', 'https://trakteer.id/okkidwi/tip/embed/modal', 'https://cdn.trakteer.id/images/mix/cendol.png', '40', 'floating-left');
+                trbtnOverlay.draw(trbtnId);
+            })();
+        `}
+    </script>
+</div>
     );
 }
 
